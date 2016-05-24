@@ -4,7 +4,7 @@ public class HeuristicsUtils {
 	
 	// implementation of aux heuristics methods	
 
-	public static int UnrestrictedHeuristic(Node currentN, Node targetNode){
+	public static int UnrestrictedHeuristic(Node currentN, Node targetN){
 		Double h = 0.0;
 		h += DistanceValue(currentN, targetN);
 		
@@ -24,10 +24,6 @@ public class HeuristicsUtils {
 	}
 	
 	public static double DurationValue(Node A, Node B){
-		return 0;
-	}
-	
-	public static double DrowzinessValue(Node A, Node B){
 		return 0;
 	}
 	
