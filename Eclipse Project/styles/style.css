@@ -1,0 +1,23 @@
+graph { 
+	fill-color: white;
+}
+
+node {
+	size: 20px;
+	fill-color: yellow, orange;
+	fill-mode: gradient-horizontal;
+	text-alignment: under;
+	text-color: black;
+	text-style: bold;
+	text-background-mode: rounded-box;
+	text-background-color: grey;
+	text-padding: 5px, 4px;
+	text-offset: 0px, 5px;
+}
+
+edge {
+}
+
+edge.tollway { size: 2px; stroke-color: red; stroke-width: 1px; stroke-mode: plain; }
+edge.tunnel { stroke-color: blue; stroke-width: 1px; stroke-mode: plain; }
+edge.bridge { stroke-color: yellow; stroke-width: 1px; stroke-mode: plain; }

@@ -1,13 +1,29 @@
 package main;
 
-import logic.GraphApplication;
+import java.util.ArrayList;
 
+import gui.GraphApp;
+import logic.Node;
+import utils.FileManager;
 
 public class Application {
+	
+	private static String dataFilePath = "data.txt";
 
 	public static void main (String[] args) {
-		GraphApplication app = new GraphApplication();
-		app.start();
+		
+		// IMPORTANT !!!!!!
+		// do not use this class yet
+		// use tests
+		
+		// read data
+		ArrayList<Node> nodeList = FileManager.readDataSet(dataFilePath);
+		
+		GraphApp gApp = new GraphApp(nodeList);
+		gApp.createGraph();
+		gApp.display();
+		
+		// write data
+		FileManager.writeDataSet(dataFilePath, nodeList);
 	}
-
 }
