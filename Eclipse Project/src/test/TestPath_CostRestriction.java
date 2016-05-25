@@ -7,6 +7,7 @@ import logic.AStar;
 import logic.Edge;
 import logic.Node;
 import logic.AStar.RestrictionType;
+import logic.AlgorithmSettings;
 
 public class TestPath_CostRestriction {
 
@@ -24,18 +25,20 @@ public class TestPath_CostRestriction {
 		nodeList.add(b);
 		nodeList.add(c);
 		
-		Edge.associateNodes(a, b, 3, 3);
-		Edge.associateNodes(a, c, 1, 1);
-		Edge.associateNodes(b, c, 1, 1);
+		Edge.associateNodes(a, b, 3);
+		Edge.associateNodes(a, c, 1);
+		Edge.associateNodes(b, c, 1);
 		
 		ArrayList<RestrictionType> restrictionList = new ArrayList<>();
 		restrictionList.add(RestrictionType.COST);
 		
 		// cost weight max
-		AStar algorithm = new AStar(0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
+		AlgorithmSettings settings = new AlgorithmSettings(2.4f, 7, 30, 15, 0, 1, 0, 0);
 		
-		LinkedList<Node> result = algorithm.runAlgorithm(a, b, restrictionList);
+		LinkedList<Node> result = AStar.runAlgorithm(settings, 0, 0, a, b, restrictionList);
 		for(Node node : result)
 			System.out.println("-> " + node.getName());
+		
+		// should print A - C - B
 	}
 }

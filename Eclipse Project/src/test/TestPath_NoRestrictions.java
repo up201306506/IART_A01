@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import logic.AStar;
+import logic.AlgorithmSettings;
 import logic.Edge;
 import logic.Node;
 import logic.AStar.RestrictionType;
@@ -24,18 +25,18 @@ public class TestPath_NoRestrictions {
 		nodeList.add(b);
 		nodeList.add(c);
 		
-		Edge.associateNodes(a, b, 1, 1);
-		Edge.associateNodes(a, c, 1, 1);
-		Edge.associateNodes(b, c, 1, 1);
+		Edge.associateNodes(a, b, 1);
+		Edge.associateNodes(a, c, 1);
+		Edge.associateNodes(b, c, 1);
 		
 		ArrayList<RestrictionType> restrictionList = new ArrayList<>();
 		restrictionList.add(RestrictionType.NO_RESTRICTION);
 		
 		// since it doest not have any restriction
 		// any weight is not important
-		AStar algorithm = new AStar(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+		AlgorithmSettings settings = new AlgorithmSettings(2.4f, 7, 30, 15, 0, 0, 0, 0);
 		
-		LinkedList<Node> result = algorithm.runAlgorithm(a, b, restrictionList);
+		LinkedList<Node> result = AStar.runAlgorithm(settings, 0, 0, a, b, restrictionList);
 		for(Node node : result)
 			System.out.println("-> " + node.getName());
 	}

@@ -9,8 +9,8 @@ public class Node {
 	private float xCord;
 	private float yCord;
 
-	private boolean canRefuel;
-	private boolean canRest;
+	public boolean canRefuel;
+	public boolean canRest;
 
 	private boolean isPointOfInterest;
 
@@ -43,14 +43,6 @@ public class Node {
 		return yCord;
 	}
 
-	public boolean canRefuel(){
-		return canRefuel;
-	}
-
-	public boolean canRest(){
-		return canRest;
-	}
-
 	public boolean isPointOfInterest(){
 		return isPointOfInterest;
 	}
@@ -60,8 +52,8 @@ public class Node {
 	}
 
 	// functions
-	public void addEdge(Node neighborNode, int duration, float cost){
-		Edge thisEdge = new Edge(neighborNode, duration, cost);
+	public void addEdge(Node neighborNode, float cost){
+		Edge thisEdge = new Edge(neighborNode, cost);
 
 		if(!neighborNodes.contains(thisEdge))
 			neighborNodes.add(thisEdge);
