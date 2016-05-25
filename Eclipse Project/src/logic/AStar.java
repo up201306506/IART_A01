@@ -1,5 +1,6 @@
 package logic;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
@@ -8,10 +9,11 @@ import java.util.Stack;
 public class AStar {
 
 	public static enum RestrictionType {
-		NO_RESTRICTION, COST, DURATION, DURATION_COST
+		NO_RESTRICTION,
+		DISTANCE, COST, DURATION, REFUEL, REST
 	}
 
-	public static LinkedList<Node> runAlgorithm(Node start, Node end, RestrictionType restrictionType){
+	public static LinkedList<Node> runAlgorithm(Node start, Node end, ArrayList<RestrictionType> restrictionType){
 
 		PriorityQueue<NodeScore> frontier = new PriorityQueue<>(); // set of nodes to be evaluated
 		frontier.add(new NodeScore(start, 0)); // the starting node is the first to be evaluated
@@ -33,7 +35,7 @@ public class AStar {
 				Node neighborNode = edgeToNeighbor.getNeighborNode();
 
 				// calculates the cost of the traveling cost from the start node to this node
-				int newCost = costSoFar.get(current.getNode()) + calculateCostBetween(current.getNode(), neighborNode, restrictionType);
+				int newCost = costSoFar.get(current.getNode()) + CostUtils.Cost(current.getNode(), neighborNode, restrictionType);
 
 				// if the node has not been already evaluated
 				if(!costSoFar.containsKey(neighborNode)
@@ -46,7 +48,7 @@ public class AStar {
 					costSoFar.put(neighborNode, newCost);
 
 					// estimates the cost to the goal node
-					int priority = newCost + calculateHeuristicBetween(neighborNode, end, restrictionType);
+					int priority = newCost + HeuristicsUtils.heuristic(neighborNode, end, restrictionType);
 					// add it to the list of nodes to be evaluated
 					frontier.add(new NodeScore(neighborNode, priority)); // possible path
 
@@ -87,73 +89,5 @@ public class AStar {
 			result.add(stack.pop());
 
 		return result;
-	}
-
-	// calculate gscore
-	private static int calculateCostBetween(Node src, Node dest, RestrictionType restrictionType){
-		switch (restrictionType) {
-		case NO_RESTRICTION:
-			return 1;
-		case COST:
-			return calculateCostAttrBetween(src, dest);
-		case DURATION:
-			return calculateDurationAttrBetween(src, dest);
-		case DURATION_COST:
-			return calculateDurationAttrBetween(src, dest)
-					+ calculateCostAttrBetween(src, dest);
-		default:
-			return -1;
-		}
-	}
-	
-	// gscore calculations for each restriction
-	private static int calculateDurationAttrBetween(Node src, Node dest){
-		for(Edge edge : src.getNeighborNodes()){
-			if(edge.getNeighborNode().equals(dest)) return edge.getDuration();
-		}
-
-		return -1;
-	}
-
-	private static int calculateCostAttrBetween(Node src, Node dest){
-		for(Edge edge : src.getNeighborNodes()){
-			if(edge.getNeighborNode().equals(dest)) return Math.round(edge.getCost());
-		}
-
-		return -1;
-	}
-
-	// calculate hscore
-	private static int calculateHeuristicBetween(Node origin, Node end, RestrictionType restrictionType){
-		switch (restrictionType) {
-		case NO_RESTRICTION:
-			return 0;
-		case COST:
-			return calculateCostHeuristicBetween(origin, end);
-		case DURATION:
-			return -1;
-		case DURATION_COST:
-			return -1;
-		default:
-			return -1;
-		}
-	}
-
-	//hscore calculations for each restriction
-	private static int calculateCostHeuristicBetween(Node origin, Node end){
-		// the next step to any other node
-		// will cost the min value of the cost in its edges
-		
-		// if an edge has no neighbors will have no cost to travel
-		if(origin.getNeighborNodes().size() == 0) return 0;
-		
-		// auto sorting of the cots
-		PriorityQueue<Float> sortedList = new PriorityQueue<>();
-		
-		// iterate through edges
-		for(Edge edgeToNeighbor : origin.getNeighborNodes())
-			sortedList.add(new Float(edgeToNeighbor.getCost()));
-		
-		return sortedList.peek().intValue();
 	}
 }

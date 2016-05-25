@@ -1,17 +1,12 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-
-import javafx.scene.control.RadioButton;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -25,13 +20,14 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Menu extends JFrame{
+	
 	public static enum RestrictionType {
 		NO_RESTRICTION, COST, DURATION, DURATION_COST
 	}
+	
 	private JPanel formPanel, bottomPanel, filePanel, restrictionPanel, moneyPanel;
 	private JButton startButton,cancelButton,openFile;
 	private JLabel titleLabel,sourceLabel,destinationLabel, fileLabel, moneyLabel;
@@ -193,6 +189,5 @@ public class Menu extends JFrame{
 	private void createTextFields(){
 		sourceField = new JTextField();
 		destinationField = new JTextField();
-	}
-	
+	}	
 }

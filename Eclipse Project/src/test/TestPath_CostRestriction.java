@@ -28,7 +28,10 @@ public class TestPath_CostRestriction {
 		Edge.associateNodes(a, c, 1, 1);
 		Edge.associateNodes(b, c, 1, 1);
 		
-		LinkedList<Node> result = AStar.runAlgorithm(a, b, RestrictionType.COST);
+		ArrayList<RestrictionType> restrictionList = new ArrayList<>();
+		restrictionList.add(RestrictionType.COST);
+		
+		LinkedList<Node> result = AStar.runAlgorithm(a, b, restrictionList);
 		for(Node node : result)
 			System.out.println("-> " + node.getName());
 	}

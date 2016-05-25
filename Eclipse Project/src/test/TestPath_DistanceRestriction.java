@@ -8,8 +8,8 @@ import logic.Edge;
 import logic.Node;
 import logic.AStar.RestrictionType;
 
-public class TestPath_NoRestrictions {
-
+public class TestPath_DistanceRestriction {
+	
 	public static void main(String[] args) {
 		ArrayList<Node> nodeList = new ArrayList<>();
 		
@@ -18,20 +18,23 @@ public class TestPath_NoRestrictions {
 		nodeList.add(a);
 		
 		// path
-		Node b = new Node("B", 1, 1, false, false, false);
-		Node c = new Node("C", 2, 1, false, false, false);
+		Node b = new Node("B", 3, 0, false, false, false);
+		Node c = new Node("C", 0, 2, false, false, false);
+		Node d = new Node("D", 3, 3, false, false, false);
 		
 		nodeList.add(b);
 		nodeList.add(c);
+		nodeList.add(d);
 		
 		Edge.associateNodes(a, b, 1, 1);
 		Edge.associateNodes(a, c, 1, 1);
-		Edge.associateNodes(b, c, 1, 1);
+		Edge.associateNodes(b, d, 1, 1);
+		Edge.associateNodes(c, d, 1, 1);
 		
 		ArrayList<RestrictionType> restrictionList = new ArrayList<>();
-		restrictionList.add(RestrictionType.NO_RESTRICTION);
+		restrictionList.add(RestrictionType.DISTANCE);
 		
-		LinkedList<Node> result = AStar.runAlgorithm(a, b, restrictionList);
+		LinkedList<Node> result = AStar.runAlgorithm(a, d, restrictionList);
 		for(Node node : result)
 			System.out.println("-> " + node.getName());
 	}

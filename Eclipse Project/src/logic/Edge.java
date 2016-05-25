@@ -29,6 +29,8 @@ public class Edge {
 	
 	// static methods, aux methods
 	public static void associateNodes(Node nodeA, Node nodeB, int duration, float cost){
+		if(nodeA.equals(nodeB)) return;
+		
 		nodeA.addEdge(nodeB, duration, cost);
 		nodeB.addEdge(nodeA, duration, cost);
 	}
