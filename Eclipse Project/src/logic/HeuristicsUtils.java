@@ -31,5 +31,9 @@ public class HeuristicsUtils {
 		return 0;
 	}
 	
+	public static double FuelValue(Node A, Node B){
+		return 0;
+	}
+	
 	
 }
