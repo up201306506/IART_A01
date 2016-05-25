@@ -59,6 +59,7 @@ public class HeuristicsUtils {
 		return h;
 	}
 	
+/*	
 	public static double Heuristic(Node currentN, Node targetN, RestrictionType type, double FuelSpent, double RestSpent){
 		
 		//If you run out of fuel or collapse from exhaustion, this node should fail.
@@ -76,15 +77,14 @@ public class HeuristicsUtils {
 		
 		return h;
 	}
-	
+*/	
 	
 	// --------------------------------------
 	// --- Auxiliars
 	// --------------------------------------
 	
 	// Functions for checking the value of each parameter of the search.
-		// Keeping EuclideanDistance public because it might have uses outside this class. 
-			//Or not.
+		// Keeping EuclideanDistance public because it might have uses outside this class.
 	
 	private static double DistanceValue(Node currentN, Node targetN){
 		//Equals its Euclidean Distance
@@ -102,23 +102,28 @@ public class HeuristicsUtils {
 	}
 	
 	
+	public static double EuclideanDistance(Node A, Node B){
+		double dx = Math.abs(B.getXCord() - A.getXCord());
+		double dy = Math.abs(B.getYCord() - A.getYCord());
+		return Math.sqrt(dx * dx + dy * dy);
+	}
+	
 	
 	/**
+	 * -DEPRECATED-
 	 * Should be used on both Fuel and Resting needs. Returns practically 0 for any input below 0.60.
-	 * Look at image "Desejo de Reabastecer" stored in the repository for a visual idea of what it does.
 	 * 
 	 * @param spentFuel should be a percentage based on maximum fuel
 	 * @return Value ranges from 0 and -1.
+	 * 
+	 * @deprecated The idea behind this part of the Heuristic was not applicable to A* and could lead to it becoming incomplete.
 	 */
+	@SuppressWarnings("unused")
+	@Deprecated
 	private static double RefuelValue(double spentFuel){
 		double value = (spentFuel - 0.2);
 		value = -4.77 * Math.exp(-1/(value*value));
 		return value;
 	}
 	
-	public static double EuclideanDistance(Node A, Node B){
-		double dx = Math.abs(B.getXCord() - A.getXCord());
-		double dy = Math.abs(B.getYCord() - A.getYCord());
-		return Math.sqrt(dx * dx + dy * dy);
-	}
 }
