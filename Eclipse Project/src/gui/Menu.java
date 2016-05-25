@@ -2,39 +2,57 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+import javafx.scene.control.RadioButton;
+
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Menu extends JFrame{
-	private JPanel formPanel, bottomPanel, filePanel;
+	public static enum RestrictionType {
+		NO_RESTRICTION, COST, DURATION, DURATION_COST
+	}
+	private JPanel formPanel, bottomPanel, filePanel, restrictionPanel, moneyPanel;
 	private JButton startButton,cancelButton,openFile;
-	private JLabel titleLabel,sourceLabel,destinationLabel, fileLabel;
+	private JLabel titleLabel,sourceLabel,destinationLabel, fileLabel, moneyLabel;
 	private JTextField sourceField, destinationField;
 	private JFileChooser fileChooser;
+	private JRadioButton[] radioButtons;
+	private ButtonGroup restrictionRadioGroup;
+	private JSpinner moneySpinner;
 	
 	private String source,destination;
+	private int option, money;
 	private File fileSelected;
 	
 	public Menu(){
-		super("Menu");
+		super("Main Menu");
 		
 		createButtons();
 		createLabels();
 		createTextFields();
+		createRadioButtons();
+		createSpinners();
 		
 		formPanel = new JPanel();
 		formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
@@ -49,12 +67,31 @@ public class Menu extends JFrame{
 		filePanel.add(fileLabel);
 		filePanel.setAlignmentX(LEFT_ALIGNMENT);
 		
+		moneyPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		moneyPanel.add(moneyLabel);
+		moneyPanel.add(moneySpinner);
+		moneyPanel.setAlignmentX(LEFT_ALIGNMENT);
+		
+		restrictionPanel = new JPanel();
+		restrictionPanel.setLayout(new BoxLayout(restrictionPanel, BoxLayout.Y_AXIS));
+		restrictionPanel.add(radioButtons[0]);
+		restrictionPanel.add(radioButtons[1]);
+		restrictionPanel.add(radioButtons[2]);
+		restrictionPanel.add(radioButtons[3]);
+		restrictionPanel.setBorder(BorderFactory.createCompoundBorder(
+			BorderFactory.createTitledBorder("Choose an option"),
+			BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+		restrictionPanel.setAlignmentX(LEFT_ALIGNMENT);
+		
+		
 		formPanel.add(titleLabel);
 		formPanel.add(filePanel);
 		formPanel.add(sourceLabel);
 		formPanel.add(sourceField);
 		formPanel.add(destinationLabel);
 		formPanel.add(destinationField);
+		formPanel.add(moneyPanel);
+		formPanel.add(restrictionPanel);
 		formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		formPanel.add(bottomPanel);
 		
@@ -64,6 +101,25 @@ public class Menu extends JFrame{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setVisible(true);
+	}
+	
+	private void createRadioButtons(){
+		radioButtons = new JRadioButton[4];
+		restrictionRadioGroup = new ButtonGroup();
+		radioButtons[0] = new JRadioButton();
+		radioButtons[0].setText("Shortest path without restrictions");
+		restrictionRadioGroup.add(radioButtons[0]);
+		radioButtons[1] = new JRadioButton();
+		radioButtons[1].setText("Shortest and cheaper path");
+		restrictionRadioGroup.add(radioButtons[1]);
+		radioButtons[2] = new JRadioButton();
+		radioButtons[2].setText("Shortest and quicker path");
+		restrictionRadioGroup.add(radioButtons[2]);
+		radioButtons[3] = new JRadioButton();
+		radioButtons[3].setText("Shortest and cheaper and quicker path");
+		restrictionRadioGroup.add(radioButtons[3]);
+		
+		radioButtons[0].setSelected(true);
 	}
 	
 	private void createButtons(){
@@ -82,16 +138,26 @@ public class Menu extends JFrame{
 		});
 		
 		startButton = new JButton("Start");
+		startButton.setForeground(Color.GREEN);
 		startButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed (ActionEvent e) {
 				source = sourceField.getText();
 				destination = destinationField.getText();
+				money = (int)moneySpinner.getValue();
+				System.out.println(money);
+				for (int i = 0; i < radioButtons.length; i++) {
+					if(radioButtons[i].isSelected()){
+						option = i;
+						break;
+					}
+				}
 				//TODO: Open graph viewer
 			}
 		});
 		
-		cancelButton = new JButton("cancel");
+		cancelButton = new JButton("Cancel");
+		cancelButton.setForeground(Color.RED);
 		cancelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed (ActionEvent e) {
@@ -108,23 +174,25 @@ public class Menu extends JFrame{
 	private void createLabels(){
 		titleLabel = new JLabel("A* Algorithm - Path Finding");
 		titleLabel.setFont(new Font(titleLabel.getFont().getFontName(), titleLabel.getFont().getStyle(), 20));
-		titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
-		sourceLabel = new JLabel("Source identifier");
-		sourceLabel.setAlignmentX(LEFT_ALIGNMENT);
+		sourceLabel = new JLabel("Source identifier:");
 		
-		destinationLabel = new JLabel("Destination identifier");
-		destinationLabel.setAlignmentX(LEFT_ALIGNMENT);
+		destinationLabel = new JLabel("Destination identifier:");
 		
 		fileLabel = new JLabel("No File Selected");
 		fileLabel.setForeground(Color.RED);
+		
+		moneyLabel = new JLabel("Starting Money:");
+	}
+	
+	private void createSpinners(){
+		moneySpinner = new JSpinner();
+		moneySpinner.setPreferredSize(new Dimension(100,25));
 	}
 	
 	private void createTextFields(){
 		sourceField = new JTextField();
-		sourceField.setAlignmentX(LEFT_ALIGNMENT);
 		destinationField = new JTextField();
-		destinationField.setAlignmentX(LEFT_ALIGNMENT);
 	}
 	
 }
