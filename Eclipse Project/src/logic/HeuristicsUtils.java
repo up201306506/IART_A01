@@ -15,13 +15,8 @@ public class HeuristicsUtils {
 	// Important values to pay attention to before using Heuristics
 	
 	/** 
-	 * Set this value to the graph start node
-	 */
-	public static Node startNode;
-	
-	/** 
-	 * Values for best cost per distance travelled and duration per distance unit travelled FOUND SO FAR.
-	 * Set them any time the A* expands the search list, including from the startNode.
+	 * Values for best cost per distance travelled and duration per distance unit travelled.
+	 * This must be set when the graph is being built, because the A* algorithm must expect the best scenario in its predictions.
 	 */
 	public static Double bestCostRatio, bestDurationRatio;
 
@@ -65,12 +60,18 @@ public class HeuristicsUtils {
 	}
 	
 	public static double Heuristic(Node currentN, Node targetN, RestrictionType type, double FuelSpent, double RestSpent){
+		
+		//If you run out of fuel or collapse from exhaustion, this node should fail.
+		if(useFuel && FuelSpent > 1)
+			return 0;
+		if(useRest && RestSpent > 1)
+			return 0;
+		
 		Double h = Heuristic(currentN, targetN, type);
 		
-		if(useFuel)
+		if(useFuel && currentN.canRefuel())
 			h += RefuelWeight * RefuelValue(FuelSpent);
-		
-		if(useRest)
+		if(useRest && currentN.canRest())
 			h += RestWeight * RefuelValue(RestSpent);
 		
 		return h;
@@ -82,7 +83,7 @@ public class HeuristicsUtils {
 	// --------------------------------------
 	
 	// Functions for checking the value of each parameter of the search.
-		// Keeping EuclideanDistance public because it might have uses outside. 
+		// Keeping EuclideanDistance public because it might have uses outside this class. 
 			//Or not.
 	
 	private static double DistanceValue(Node currentN, Node targetN){
@@ -90,14 +91,14 @@ public class HeuristicsUtils {
 		return EuclideanDistance(currentN, targetN);
 	}
 	
-	private static double CostValue(Node A, Node B){
-		
-		return 0;	
+	private static double CostValue(Node currentN, Node targetN){
+		double distanceLeft = EuclideanDistance(currentN, targetN);
+		return distanceLeft * bestCostRatio;	
 	}
 	
 	private static double DurationValue(Node currentN, Node targetN){
-		
-		return 0;
+		double distanceLeft = EuclideanDistance(currentN, targetN);
+		return distanceLeft * bestDurationRatio;
 	}
 	
 	
