@@ -2,8 +2,17 @@ package logic;
 
 import logic.AStar.RestrictionType;
 
+/**
+ * @author Sunset(Pedro Carvalho) 
+ *
+ */
 public class HeuristicsUtils {
 	
+	// --------------------------------------
+	// --- Set Up
+	// --------------------------------------
+	
+	// Important values to pay attention to before using Heuristics
 	
 	/** 
 	 * Set this value to the graph start node
@@ -28,7 +37,13 @@ public class HeuristicsUtils {
 	public static int DurationWeight = 1, CostWeight = 1, RefuelWeight = 1, RestWeight = 1;
 	
 	
-	// implementation of aux heuristics methods		
+	// --------------------------------------
+	// --- Heuristic Functions
+	// --------------------------------------
+	
+	// Summon Heuristic() as needed. 
+	// Number or arguments grows incrementally with number of operations evaluated.
+		
 	public static double Heuristic(Node currentN, Node targetN){
 		
 		return DistanceValue(currentN, targetN);
@@ -61,7 +76,16 @@ public class HeuristicsUtils {
 		return h;
 	}
 	
-	public static double DistanceValue(Node currentN, Node targetN){
+	
+	// --------------------------------------
+	// --- Auxiliars
+	// --------------------------------------
+	
+	// Functions for checking the value of each parameter of the search.
+		// Keeping EuclideanDistance public because it might have uses outside. 
+			//Or not.
+	
+	private static double DistanceValue(Node currentN, Node targetN){
 		//Equals its Euclidean Distance
 		return EuclideanDistance(currentN, targetN);
 	}
@@ -70,7 +94,6 @@ public class HeuristicsUtils {
 		
 		return 0;	
 	}
-	
 	
 	private static double DurationValue(Node currentN, Node targetN){
 		
