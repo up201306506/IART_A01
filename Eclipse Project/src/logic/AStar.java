@@ -12,8 +12,49 @@ public class AStar {
 		NO_RESTRICTION,
 		DISTANCE, COST, DURATION, REFUEL, REST
 	}
+	
+	// algorithm constants
+	public float averageSpeed;
+	public float averageGasConsume;
+	public float maxGasDeposit;
+	public float startingGas;
+	
+	public float averageTireness;
+	public int maxTravelTime;
+	public int startingTravelTime;
+	
+	// restrictions weight
+	public float distanceWeight;
+	public float costWeight;
+	public float durationWeight;
+	
+	public float refuelWeight;
+	public float restWeight;
+	
+	// set values used in the algorithm
+	public AStar(float averageSpeed, float averageGasConsume, float maxGasDeposit, float startingGas, // refueling calculations
+			float averageTireness, int maxTravelTime, int startingTravelTime, // resting calculations @maxTravelTime in minutes
+			float distanceWeight, float costWeight, float durationWeight, // algorithm restrictions weight
+			float refuelWeight, float restWeight){
+		
+		this.averageSpeed = averageSpeed;
+		this.averageGasConsume = averageGasConsume;
+		this.maxGasDeposit = maxGasDeposit;
+		this.startingGas = startingGas;
+		
+		this.averageTireness = averageTireness;
+		this.maxTravelTime = maxTravelTime;
+		this.startingTravelTime = startingTravelTime;
+		
+		this.distanceWeight = distanceWeight;
+		this.costWeight = costWeight;
+		this.durationWeight = durationWeight;
+		
+		this.refuelWeight = refuelWeight;
+		this.restWeight = restWeight;
+	}
 
-	public static LinkedList<Node> runAlgorithm(Node start, Node end, ArrayList<RestrictionType> restrictionType){
+	public LinkedList<Node> runAlgorithm(Node start, Node end, ArrayList<RestrictionType> restrictionType){
 
 		PriorityQueue<NodeScore> frontier = new PriorityQueue<>(); // set of nodes to be evaluated
 		frontier.add(new NodeScore(start, 0)); // the starting node is the first to be evaluated
@@ -48,7 +89,7 @@ public class AStar {
 					costSoFar.put(neighborNode, newCost);
 
 					// estimates the cost to the goal node
-					int priority = newCost + HeuristicsUtils.heuristic(neighborNode, end, restrictionType);
+					int priority = newCost + HeuristicsUtils.heuristic(this, neighborNode, end, restrictionType);
 					// add it to the list of nodes to be evaluated
 					frontier.add(new NodeScore(neighborNode, priority)); // possible path
 
@@ -64,7 +105,7 @@ public class AStar {
 	}
 
 	// aux to retrieve path
-	private static LinkedList<Node> retrievePath(Node start, Node end, HashMap<Node, Node> cameFrom){
+	private LinkedList<Node> retrievePath(Node start, Node end, HashMap<Node, Node> cameFrom){
 
 		// temporary use of stack to reverse hashmap
 		Stack<Node> stack = new Stack<>();

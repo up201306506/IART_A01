@@ -31,7 +31,10 @@ public class TestPath_CostRestriction {
 		ArrayList<RestrictionType> restrictionList = new ArrayList<>();
 		restrictionList.add(RestrictionType.COST);
 		
-		LinkedList<Node> result = AStar.runAlgorithm(a, b, restrictionList);
+		// cost weight max
+		AStar algorithm = new AStar(0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
+		
+		LinkedList<Node> result = algorithm.runAlgorithm(a, b, restrictionList);
 		for(Node node : result)
 			System.out.println("-> " + node.getName());
 	}

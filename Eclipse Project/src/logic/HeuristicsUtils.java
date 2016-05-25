@@ -18,17 +18,6 @@ public class HeuristicsUtils {
 	 */
 	public static Double bestCostRatio, bestDurationRatio;
 
-	/**
-	 * Choose whether to use Refueling Station Search and Resting Place Search
-	 */
-	public static boolean useFuel = false, useRest = false;
-
-	/**
-	 * Parameters that change how large the impact the requirements will have on the basic search heuristic.
-	 * Require fine-tuning on a per-case basis. Too low and they'll be ignored, too high and they'll take over the search for a solution. 
-	 */
-	public static int DurationWeight = 1, CostWeight = 1, RefuelWeight = 1, RestWeight = 1;
-
 
 	// --------------------------------------
 	// --- Heuristic Functions
@@ -37,11 +26,7 @@ public class HeuristicsUtils {
 	// Summon Heuristic() as needed. 
 	// Number or arguments grows incrementally with number of operations evaluated.
 
-	public static double Heuristic(Node currentN, Node targetN){		
-		return DistanceValue(currentN, targetN);
-	}
-
-	public static int heuristic(Node currentN, Node targetN, ArrayList<RestrictionType> restrictionList){
+	public static int heuristic(AStar algorithm, Node currentN, Node targetN, ArrayList<RestrictionType> restrictionList){
 
 		// hscore
 		double h = 0;
@@ -52,15 +37,15 @@ public class HeuristicsUtils {
 				return 0;
 			
 			if (restrictionType == RestrictionType.DISTANCE)
-				h += DistanceValue(currentN, targetN);
+				h += algorithm.distanceWeight * DistanceValue(currentN, targetN);
 			
 			if (restrictionType == RestrictionType.COST)
 				if(bestCostRatio != null)
-					h += CostWeight * CostValue(currentN, targetN);
+					h += algorithm.costWeight * CostValue(currentN, targetN);
 
 			if(restrictionType == RestrictionType.DURATION)
 				if(bestDurationRatio != null)
-					h += DurationWeight * DurationValue(currentN, targetN);
+					h += algorithm.durationWeight * DurationValue(currentN, targetN);
 		}
 
 		return (int) Math.round(h);
@@ -98,12 +83,6 @@ public class HeuristicsUtils {
 		return EuclideanDistance(currentN, targetN);
 	}
 
-	public static double EuclideanDistance(Node A, Node B){
-		double dx = Math.abs(B.getXCord() - A.getXCord());
-		double dy = Math.abs(B.getYCord() - A.getYCord());
-		return Math.sqrt(dx * dx + dy * dy);
-	}
-
 	private static double CostValue(Node currentN, Node targetN){
 		double distanceLeft = EuclideanDistance(currentN, targetN);
 		return distanceLeft * bestCostRatio;	
@@ -112,6 +91,13 @@ public class HeuristicsUtils {
 	private static double DurationValue(Node currentN, Node targetN){
 		double distanceLeft = EuclideanDistance(currentN, targetN);
 		return distanceLeft * bestDurationRatio;
+	}
+	
+	// public aux functions
+	public static double EuclideanDistance(Node A, Node B){
+		double dx = Math.abs(B.getXCord() - A.getXCord());
+		double dy = Math.abs(B.getYCord() - A.getYCord());
+		return Math.sqrt(dx * dx + dy * dy);
 	}
 
 	/**

@@ -31,7 +31,11 @@ public class TestPath_NoRestrictions {
 		ArrayList<RestrictionType> restrictionList = new ArrayList<>();
 		restrictionList.add(RestrictionType.NO_RESTRICTION);
 		
-		LinkedList<Node> result = AStar.runAlgorithm(a, b, restrictionList);
+		// since it doest not have any restriction
+		// any weight is not important
+		AStar algorithm = new AStar(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+		
+		LinkedList<Node> result = algorithm.runAlgorithm(a, b, restrictionList);
 		for(Node node : result)
 			System.out.println("-> " + node.getName());
 	}

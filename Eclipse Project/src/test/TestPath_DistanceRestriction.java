@@ -34,7 +34,10 @@ public class TestPath_DistanceRestriction {
 		ArrayList<RestrictionType> restrictionList = new ArrayList<>();
 		restrictionList.add(RestrictionType.DISTANCE);
 		
-		LinkedList<Node> result = AStar.runAlgorithm(a, d, restrictionList);
+		// distance weight is max
+		AStar algorithm = new AStar(0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+		
+		LinkedList<Node> result = algorithm.runAlgorithm(a, d, restrictionList);
 		for(Node node : result)
 			System.out.println("-> " + node.getName());
 	}
