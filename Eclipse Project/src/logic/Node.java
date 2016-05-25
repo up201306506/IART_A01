@@ -3,6 +3,9 @@ package logic;
 import java.util.ArrayList;
 
 public class Node {
+	
+	public static  ArrayList<Node> refuelNodeList = new ArrayList<>();
+	public static  ArrayList<Node> restNodeList = new ArrayList<>();
 
 	private String nodeName;
 
@@ -28,6 +31,11 @@ public class Node {
 		this.isPointOfInterest = isPointOfInterest;
 
 		neighborNodes = new ArrayList<>();
+		
+		if(canRefuel)
+			refuelNodeList.add(this);
+		if(canRest)
+			restNodeList.add(this);
 	}
 
 	// getters & setters

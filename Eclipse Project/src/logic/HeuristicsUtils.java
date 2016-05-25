@@ -26,15 +26,15 @@ public class HeuristicsUtils {
 
 			if (restrictionType == RestrictionType.COST)
 				if(settings.varCostWeight <= 0) return 0;
-				else h += settings.varCostWeight * CostValue(currentN, targetN);
+				else h += settings.varCostWeight * CostValue(currentN);
 			
 			if(restrictionType == RestrictionType.REFUEL)
 				if(settings.varRefuelWeight <= 0) return 0;
-				else h += settings.varRefuelWeight * FuelValue(currentN, targetN);
+				else h += settings.varRefuelWeight * FuelValue(currentN);
 			
 			if(restrictionType == RestrictionType.REST)
 				if(settings.varRestWeight <= 0) return 0;
-				else h += settings.varRestWeight * RestValue(currentN, targetN);
+				else h += settings.varRestWeight * RestValue(currentN);
 		}
 
 		return (int) Math.round(h);
@@ -52,23 +52,23 @@ public class HeuristicsUtils {
 		return EuclideanDistance(currentN, targetN);
 	}
 
-	private static double CostValue(Node currentN, Node targetN){
-		// TODO menor valor de custo nas edges entre o current e target????
+	private static double CostValue(Node currentN){		
+		Float minimumCost = null;
+		for(Edge neighbourEdge : currentN.getNeighborNodes())
+			if(minimumCost == null || minimumCost > neighbourEdge.getCost() )
+				minimumCost = neighbourEdge.getCost();
 		
-		double distanceLeft = EuclideanDistance(currentN, targetN);
-		return distanceLeft;	
+		return minimumCost.doubleValue();	
 	}
 	
-	private static double FuelValue(Node currentN, Node targetN){
-		// TODO 
-		
-		return 1;
+	private static double FuelValue(Node currentN){
+		Node closestRefuel = findClosestRefuel(currentN);
+		return EuclideanDistance(currentN,closestRefuel);
 	}
 	
-	private static double RestValue(Node currentN, Node targetN){
-		// TODO 
-		
-		return 1;
+	private static double RestValue(Node currentN){
+		Node closestRefuel = findClosestRest(currentN);
+		return EuclideanDistance(currentN,closestRefuel);
 	}
 
 	// public aux functions
@@ -76,5 +76,36 @@ public class HeuristicsUtils {
 		double dx = Math.abs(B.getXCord() - A.getXCord());
 		double dy = Math.abs(B.getYCord() - A.getYCord());
 		return Math.sqrt(dx * dx + dy * dy);
+	}
+	
+	
+	public static Node findClosestRefuel(Node currentN){
+			Node result = null;
+			Double bestDist = null;
+			
+			for (Node tempN : Node.refuelNodeList) {
+				double dist = EuclideanDistance(currentN, tempN);
+				if(result == null || dist < bestDist){
+					result = tempN;
+					bestDist = dist;
+				}
+			}
+			
+			return result;
+	}
+	
+	public static Node findClosestRest(Node currentN){
+		Node result = null;
+		Double bestDist = null;
+		
+		for (Node tempN : Node.restNodeList) {
+			double dist = EuclideanDistance(currentN, tempN);
+			if(result == null || dist < bestDist){
+				result = tempN;
+				bestDist = dist;
+			}
+		}
+		
+		return result;
 	}
 }
