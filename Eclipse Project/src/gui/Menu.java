@@ -10,16 +10,15 @@ import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
-import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Menu extends JFrame{
@@ -28,25 +27,30 @@ public class Menu extends JFrame{
 		NO_RESTRICTION, COST, DURATION, DURATION_COST
 	}
 	
-	private JPanel formPanel, bottomPanel, filePanel, restrictionPanel, moneyPanel;
+	private JPanel formPanel, bottomPanel, filePanel, restrictionPanel, moneyPanel, depositPanel, hourPanel;
 	private JButton startButton,cancelButton,openFile;
-	private JLabel titleLabel,sourceLabel,destinationLabel, fileLabel, moneyLabel;
-	private JTextField sourceField, destinationField;
+	private JLabel titleLabel,sourceLabel,destinationLabel, fileLabel, moneyLabel, errorLabel, depositLabel, hourLabel;
+	private JComboBox<String> sourceComboBox, destinationComboBox;
 	private JFileChooser fileChooser;
 	private JRadioButton[] radioButtons;
-	private ButtonGroup restrictionRadioGroup;
-	private JSpinner moneySpinner;
+	private JSpinner moneySpinner,depositSpinner,hourSpinner;
 	
 	private String source,destination;
-	private int option, money;
+	private int option, money, depositSize, hours;
 	private File fileSelected;
 	
 	public Menu(){
+		/*
+		 * Limite de dinheiro
+		 * Tamanho Depósito
+		 * Tempo que guia com cada descanso
+		 */
 		super("Main Menu");
+		
 		
 		createButtons();
 		createLabels();
-		createTextFields();
+		createComboBoxes();
 		createRadioButtons();
 		createSpinners();
 		
@@ -68,25 +72,34 @@ public class Menu extends JFrame{
 		moneyPanel.add(moneySpinner);
 		moneyPanel.setAlignmentX(LEFT_ALIGNMENT);
 		
+		depositPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		depositPanel.add(depositLabel);
+		depositPanel.add(depositSpinner);
+		depositPanel.setAlignmentX(LEFT_ALIGNMENT);
+		
+		hourPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		hourPanel.add(hourLabel);
+		hourPanel.add(hourSpinner);
+		hourPanel.setAlignmentX(LEFT_ALIGNMENT);
+		
 		restrictionPanel = new JPanel();
 		restrictionPanel.setLayout(new BoxLayout(restrictionPanel, BoxLayout.Y_AXIS));
-		restrictionPanel.add(radioButtons[0]);
-		restrictionPanel.add(radioButtons[1]);
-		restrictionPanel.add(radioButtons[2]);
-		restrictionPanel.add(radioButtons[3]);
+		for (int i = 0; i < radioButtons.length; i++) {
+			restrictionPanel.add(radioButtons[i]);
+		}
 		restrictionPanel.setBorder(BorderFactory.createCompoundBorder(
 			BorderFactory.createTitledBorder("Choose an option"),
 			BorderFactory.createEmptyBorder(5, 5, 5, 5)));
-		restrictionPanel.setAlignmentX(LEFT_ALIGNMENT);
-		
 		
 		formPanel.add(titleLabel);
 		formPanel.add(filePanel);
 		formPanel.add(sourceLabel);
-		formPanel.add(sourceField);
+		formPanel.add(sourceComboBox);
 		formPanel.add(destinationLabel);
-		formPanel.add(destinationField);
+		formPanel.add(destinationComboBox);
 		formPanel.add(moneyPanel);
+		formPanel.add(depositPanel);
+		formPanel.add(hourPanel);
 		formPanel.add(restrictionPanel);
 		formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		formPanel.add(bottomPanel);
@@ -100,22 +113,21 @@ public class Menu extends JFrame{
 	}
 	
 	private void createRadioButtons(){
-		radioButtons = new JRadioButton[4];
-		restrictionRadioGroup = new ButtonGroup();
+		radioButtons = new JRadioButton[5];
 		radioButtons[0] = new JRadioButton();
-		radioButtons[0].setText("Shortest path without restrictions");
-		restrictionRadioGroup.add(radioButtons[0]);
-		radioButtons[1] = new JRadioButton();
-		radioButtons[1].setText("Shortest and cheaper path");
-		restrictionRadioGroup.add(radioButtons[1]);
-		radioButtons[2] = new JRadioButton();
-		radioButtons[2].setText("Shortest and quicker path");
-		restrictionRadioGroup.add(radioButtons[2]);
-		radioButtons[3] = new JRadioButton();
-		radioButtons[3].setText("Shortest and cheaper and quicker path");
-		restrictionRadioGroup.add(radioButtons[3]);
+		radioButtons[0].setText("Shortest path                                   ");
 		
-		radioButtons[0].setSelected(true);
+		radioButtons[1] = new JRadioButton();
+		radioButtons[1].setText("Cheapest path");
+		
+		radioButtons[2] = new JRadioButton();
+		radioButtons[2].setText("Quickest path");
+		
+		radioButtons[3] = new JRadioButton();
+		radioButtons[3].setText("Refuel");
+		
+		radioButtons[4] = new JRadioButton();
+		radioButtons[4].setText("Rest");
 	}
 	
 	private void createButtons(){
@@ -129,25 +141,23 @@ public class Menu extends JFrame{
 	            fileSelected = fileChooser.getSelectedFile();
 	            fileLabel.setText(fileSelected.getName());
 	            fileLabel.setForeground(Color.GREEN);
+	            sourceComboBox.setEnabled(true);
+	            destinationComboBox.setEnabled(true);
 				}
 			}
 		});
 		
 		startButton = new JButton("Start");
 		startButton.setForeground(Color.GREEN);
+		startButton.setEnabled(false);
 		startButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed (ActionEvent e) {
-				source = sourceField.getText();
-				destination = destinationField.getText();
+				source = (String)sourceComboBox.getSelectedItem();
+				destination = (String)destinationComboBox.getSelectedItem();
 				money = (int)moneySpinner.getValue();
-				System.out.println(money);
-				for (int i = 0; i < radioButtons.length; i++) {
-					if(radioButtons[i].isSelected()){
-						option = i;
-						break;
-					}
-				}
+				depositSize = (int)moneySpinner.getValue();
+				hours = (int)moneySpinner.getValue();
 				//TODO: Open graph viewer
 			}
 		});
@@ -179,15 +189,42 @@ public class Menu extends JFrame{
 		fileLabel.setForeground(Color.RED);
 		
 		moneyLabel = new JLabel("Starting Money:");
+		depositLabel = new JLabel("Deposit limit:");
+		hourLabel = new JLabel("Hours between rest:");
 	}
 	
 	private void createSpinners(){
 		moneySpinner = new JSpinner();
 		moneySpinner.setPreferredSize(new Dimension(100,25));
+		
+		depositSpinner = new JSpinner();
+		depositSpinner.setPreferredSize(new Dimension(100,25));
+		
+		hourSpinner = new JSpinner();
+		hourSpinner.setPreferredSize(new Dimension(100,25));
 	}
 	
-	private void createTextFields(){
-		sourceField = new JTextField();
-		destinationField = new JTextField();
-	}	
+	private void createComboBoxes(){
+		sourceComboBox = new JComboBox<String>();
+		sourceComboBox.setAlignmentX(LEFT_ALIGNMENT);
+		sourceComboBox.setEnabled(false);
+		sourceComboBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed (ActionEvent e) {
+				System.out.println(sourceComboBox.getSelectedItem());
+			}
+		});
+		
+		
+		destinationComboBox = new JComboBox<String>();
+		destinationComboBox.setAlignmentX(LEFT_ALIGNMENT);
+		destinationComboBox.setEnabled(false);
+		destinationComboBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed (ActionEvent e) {
+				System.out.println(destinationComboBox.getSelectedItem());
+			}
+		});
+	}
+	
 }

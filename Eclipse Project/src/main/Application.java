@@ -2,7 +2,9 @@ package main;
 
 import java.util.ArrayList;
 
+
 import gui.GraphApp;
+import gui.Menu;
 import logic.Node;
 import utils.FileManager;
 
@@ -17,13 +19,17 @@ public class Application {
 		// use tests
 		
 		// read data
-		ArrayList<Node> nodeList = FileManager.readDataSet(dataFilePath);
+		/*ArrayList<Node> nodeList = FileManager.readDataSet(dataFilePath);
 		
 		GraphApp gApp = new GraphApp(nodeList);
 		gApp.createGraph();
 		gApp.display();
+		*/
+		
+		Menu menu = new Menu();
+		
 		
 		// write data
-		FileManager.writeDataSet(dataFilePath, nodeList);
+		//FileManager.writeDataSet(dataFilePath, nodeList);
 	}
 }
