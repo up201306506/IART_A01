@@ -1,9 +1,13 @@
 package gui;
 
+import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.ui.swingViewer.ViewPanel;
+import org.graphstream.ui.view.Viewer;
 
 import logic.Node;
 
@@ -11,24 +15,39 @@ public class GraphApp {
 	
 	private Graph graph;
 	private String pathName;
+	private ViewPanel view;
 	
 	private ArrayList<Node> nodeList;
+	private LinkedList<Node> poi;
+	private Node sourceNode,destinationNode;
+	private GraphController clicks;
 	
 	public GraphApp(ArrayList<Node> nodeList){
 		// sets configs for graphstream lib
 		System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
-		graph = new SingleGraph("");
+		graph = new SingleGraph("map");
+		poi = new LinkedList<>();
+		
+		Viewer viewer = new Viewer(graph,Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+		view = viewer.addDefaultView(false);
+		view.setPreferredSize(new Dimension(700,500));
+		clicks = new GraphController(graph, viewer, this);
+		
+		
 		pathName = GraphApp.class.getProtectionDomain().getCodeSource().getLocation().getFile();
 		graph.addAttribute("ui.stylesheet", "url('file:///" + pathName + "../styles/style.css')");
 		
 		// set data
 		this.nodeList = nodeList;
+		clicks.start();
 	}
 	
 	public void createGraph(){
 		// add nodes
 		for(Node node : nodeList){
 			graph.addNode(node.getName()).addAttribute("ui.label", node.getName());
+			graph.getNode(node.getName()).addAttribute("logic-node", node);
+			graph.getNode(node.getName()).setAttribute("state", 0);
 			graph.getNode(node.getName()).addAttribute("layout.frozen");
 			graph.getNode(node.getName()).addAttribute("xy", node.getXCord(), node.getYCord());
 		}
@@ -39,5 +58,41 @@ public class GraphApp {
 	
 	public void display(){
 		graph.display();
+	}
+	
+	public ViewPanel getView(){
+		return view;
+	}
+	
+	public boolean isInPOIList(Node n){
+		return poi.contains(n);
+	}
+	
+	public void addPOI(Node n){
+		poi.add(n);
+	}
+	
+	public void removeLast(){
+		poi.removeLast();
+	}
+	
+	public void addSource(Node n){
+		sourceNode = n;
+	}
+	
+	public void addDestination(Node n){
+		destinationNode = n;
+	}
+	
+	public boolean isValid(){
+		return clicks.isValid();
+	}
+	
+	public int getPOISize(){
+		return poi.size();
+	}
+	
+	public LinkedList<Node> getPOI(){
+		return poi;
 	}
 }
