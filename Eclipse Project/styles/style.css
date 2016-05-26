@@ -1,21 +1,18 @@
 graph { 
-	fill-color: white;
+	fill-color: rgb(85,185,94);
 }
 
 node {
 	size: 20px;
 	fill-color: yellow, orange;
 	fill-mode: gradient-horizontal;
-	text-alignment: under;
+	text-alignment: center;
 	text-color: black;
 	text-style: bold;
-	text-background-mode: rounded-box;
-	text-background-color: grey;
-	text-padding: 5px, 4px;
-	text-offset: 0px, 5px;
 }
 
 edge {
+	fill-color: red;
 }
 
 edge.tollway { size: 2px; stroke-color: red; stroke-width: 1px; stroke-mode: plain; }
