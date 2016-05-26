@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class Node {
 	
-	public static  ArrayList<Node> refuelNodeList = new ArrayList<>();
-	public static  ArrayList<Node> restNodeList = new ArrayList<>();
+	public static ArrayList<Node> refuelNodeList = new ArrayList<>();
+	public static ArrayList<Node> restNodeList = new ArrayList<>();
 
 	private String nodeName;
 

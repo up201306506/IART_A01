@@ -27,12 +27,20 @@ public class AlgorithmSettings {
 
 	public float varRefuelWeight;
 	public float varRestWeight;
+	
+	// var used to pass initial values to next iterations of A*
+	public int nextGasValue;
+	public int nextTravelTime;
 
 	// set values used in the algorithm
-	public AlgorithmSettings(float averageSpeed, float averageGasConsume, int maxGasDeposit, // refueling calculations
+	public AlgorithmSettings(int initialGasVale, int initialTimeTravelValue, // initial values for algorithm
+			float averageSpeed, float averageGasConsume, int maxGasDeposit, // refueling calculations
 			int maxTravelTime, // resting calculations @maxTravelTime in minutes
 			float distanceWeight, float costWeight, // algorithm restrictions weight
 			float refuelWeight, float restWeight){
+		
+		nextGasValue = initialGasVale;
+		nextTravelTime = initialTimeTravelValue;
 
 		this.averageSpeed = averageSpeed;
 		this.averageGasConsume = averageGasConsume;

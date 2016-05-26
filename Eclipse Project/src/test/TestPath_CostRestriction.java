@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import logic.AStar;
 import logic.Edge;
 import logic.Node;
+import logic.NodeStop;
 import logic.AStar.RestrictionType;
 import logic.AlgorithmSettings;
 
@@ -33,11 +34,11 @@ public class TestPath_CostRestriction {
 		restrictionList.add(RestrictionType.COST);
 		
 		// cost weight max
-		AlgorithmSettings settings = new AlgorithmSettings(2.4f, 7, 30, 15, 0, 1, 0, 0);
+		AlgorithmSettings settings = new AlgorithmSettings(0, 0, 2.4f, 7, 30, 15, 0, 1, 0, 0);
 		
-		LinkedList<Node> result = AStar.runAlgorithm(settings, 0, 0, a, b, restrictionList);
-		for(Node node : result)
-			System.out.println("-> " + node.getName());
+		LinkedList<NodeStop> result = AStar.runAlgorithm(settings, 0, 0, a, b, restrictionList);
+		for(NodeStop stop : result)
+			System.out.println("-> " + stop.getNode().getName());
 		
 		// should print A - C - B
 	}

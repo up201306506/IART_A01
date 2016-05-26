@@ -78,7 +78,6 @@ public class HeuristicsUtils {
 		return Math.sqrt(dx * dx + dy * dy);
 	}
 	
-	
 	public static Node findClosestRefuel(Node currentN){
 			Node result = null;
 			Double bestDist = null;

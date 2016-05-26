@@ -13,7 +13,7 @@ public class AStar {
 		DISTANCE, COST, REFUEL, REST
 	}	
 
-	public static LinkedList<Node> runAlgorithm(AlgorithmSettings settings, int initialGas, int initialTravelTime,
+	public static LinkedList<NodeStop> runAlgorithm(AlgorithmSettings settings, int initialGas, int initialTravelTime,
 			Node start, Node end, ArrayList<RestrictionType> restrictionType){
 
 		PriorityQueue<NodeScore> frontier = new PriorityQueue<>(); // set of nodes to be evaluated
@@ -26,6 +26,11 @@ public class AStar {
 		// for each evaluated node
 		HashMap<Node, GasTravelTime> pathInformation = new HashMap<>(); 
 		pathInformation.put(start, new GasTravelTime(initialGas, initialTravelTime));
+		
+		// nodes it stopped to refuel - register
+		ArrayList<Node> refueledHere = new ArrayList<>();
+		// nodes it stopped to rest - register
+		ArrayList<Node> restedHere = new ArrayList<>();
 
 		HashMap<Node, ScoreDistance> costSoFar = new HashMap<>(); // mapping of the score of each node evaluated
 		costSoFar.put(start, new ScoreDistance(0, 0)); // score of the starting node is always 0
@@ -34,7 +39,9 @@ public class AStar {
 			NodeScore current = frontier.remove(); // evaluates the node with the lowest score at the moment
 
 			// if the node being evaluated is the goal node
-			if(current.getNode().equals(end)) return retrievePath(start, end, cameFrom);
+			if(current.getNode().equals(end))
+				return retrievePath(start, end, cameFrom, refueledHere, restedHere,
+						settings, pathInformation.get(current.getNode()));
 
 			// BLOCK OF CODE NOT TESTED
 			// NEEDS HEURISTICS AND TEST CASE GRAPH
@@ -50,7 +57,9 @@ public class AStar {
 
 				pathInformation.remove(current.getNode());
 
+				// updates the gas value of this node
 				pathInformation.put(current.getNode(), new GasTravelTime(settings.maxGasDeposit, oldTimeTravelled));
+				refueledHere.add(current.getNode());
 			}
 
 			// if rest weight is high and this node allow resting, will rest
@@ -59,7 +68,9 @@ public class AStar {
 
 				pathInformation.remove(current.getNode());
 
+				// updates the time travel value of this node
 				pathInformation.put(current.getNode(), new GasTravelTime(oldGas, settings.maxTravelTime));
+				restedHere.add(current.getNode());
 			}
 
 			// BLOCK OF CODE NOT TESTED -- ENDED
@@ -81,7 +92,7 @@ public class AStar {
 					if(costSoFar.containsKey(neighborNode))
 						costSoFar.remove(neighborNode);
 					costSoFar.put(neighborNode, new ScoreDistance(newCost,
-							costSoFar.get(current).distance
+							costSoFar.get(current.getNode()).distance
 							+ HeuristicsUtils.EuclideanDistance(current.getNode(), neighborNode)));
 
 					// estimates the cost to the goal node
@@ -113,7 +124,9 @@ public class AStar {
 	}
 
 	// aux to retrieve path
-	private static LinkedList<Node> retrievePath(Node start, Node end, HashMap<Node, Node> cameFrom){
+	private static LinkedList<NodeStop> retrievePath(Node start, Node end, HashMap<Node, Node> cameFrom,
+			ArrayList<Node> refueledHere, ArrayList<Node> restedHere,
+			AlgorithmSettings settings, GasTravelTime lastInfo){
 
 		// temporary use of stack to reverse hashmap
 		Stack<Node> stack = new Stack<>();
@@ -131,11 +144,28 @@ public class AStar {
 		stack.pop();
 
 		// list of nodes sequence
-		LinkedList<Node> result = new LinkedList<>();
+		LinkedList<NodeStop> result = new LinkedList<>();
 
 		// sequences the node order
-		while(!stack.isEmpty())
-			result.add(stack.pop());
+		while(!stack.isEmpty()){
+			Node node = stack.pop();
+			NodeStop stop = new NodeStop(node, false, false, settings);
+			
+			// mark this node if it stopped here to refuel
+			if(refueledHere.contains(node))
+				stop.stoppedToRefuel = true;
+			
+			// mark this node if it stopped here to rest
+			if(restedHere.contains(node))
+				stop.stoppedToRest = true;
+			
+			result.add(stop);
+		}
+		
+		// updates last path information
+		// for next iteration of A*
+		settings.nextGasValue = lastInfo.currentGas;
+		settings.nextTravelTime = lastInfo.travelTime;
 
 		return result;
 	}
