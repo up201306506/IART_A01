@@ -6,7 +6,9 @@ import java.util.LinkedList;
 import logic.AStar;
 import logic.Edge;
 import logic.Node;
+import logic.NodeStop;
 import logic.AStar.RestrictionType;
+import logic.AlgorithmSettings;
 
 public class TestPath_CostRestriction {
 
@@ -14,22 +16,30 @@ public class TestPath_CostRestriction {
 		ArrayList<Node> nodeList = new ArrayList<>();
 		
 		// src node
-		Node a = new Node("A", 0, 0, false, false, false);
+		Node a = new Node("A", 0, 0, false, false);
 		nodeList.add(a);
 		
 		// path
-		Node b = new Node("B", 1, 1, false, false, false);
-		Node c = new Node("C", 2, 1, false, false, false);
+		Node b = new Node("B", 1, 1, false, false);
+		Node c = new Node("C", 2, 1, false, false);
 		
 		nodeList.add(b);
 		nodeList.add(c);
 		
-		Edge.associateNodes(a, b, 3, 3);
-		Edge.associateNodes(a, c, 1, 1);
-		Edge.associateNodes(b, c, 1, 1);
+		Edge.associateNodes(a, b, 3);
+		Edge.associateNodes(a, c, 1);
+		Edge.associateNodes(b, c, 1);
 		
-		LinkedList<Node> result = AStar.runAlgorithm(a, b, RestrictionType.COST);
-		for(Node node : result)
-			System.out.println("-> " + node.getName());
+		ArrayList<RestrictionType> restrictionList = new ArrayList<>();
+		restrictionList.add(RestrictionType.COST);
+		
+		// cost weight max
+		AlgorithmSettings settings = new AlgorithmSettings(0, 0, 2.4f, 7, 30, 15, 0, 1, 0, 0);
+		
+		LinkedList<NodeStop> result = AStar.runAlgorithm(settings, 0, 0, a, b, restrictionList);
+		for(NodeStop stop : result)
+			System.out.println("-> " + stop.getNode().getName());
+		
+		// should print A - C - B
 	}
 }

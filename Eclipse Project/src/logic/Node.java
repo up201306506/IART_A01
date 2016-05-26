@@ -3,20 +3,21 @@ package logic;
 import java.util.ArrayList;
 
 public class Node {
+	
+	public static ArrayList<Node> refuelNodeList = new ArrayList<>();
+	public static ArrayList<Node> restNodeList = new ArrayList<>();
 
 	private String nodeName;
 
 	private float xCord;
 	private float yCord;
 
-	private boolean canRefuel;
-	private boolean canRest;
-
-	private boolean isPointOfInterest;
+	public boolean canRefuel;
+	public boolean canRest;
 
 	private ArrayList<Edge> neighborNodes;
 
-	public Node(String nodeName, float xCord, float yCord, boolean canRefuel, boolean canRest, boolean isPointOfInterest){
+	public Node(String nodeName, float xCord, float yCord, boolean canRefuel, boolean canRest){
 		this.nodeName = nodeName;
 
 		this.xCord = xCord;
@@ -25,9 +26,12 @@ public class Node {
 		this.canRefuel = canRefuel;
 		this.canRest = canRest;
 
-		this.isPointOfInterest = isPointOfInterest;
-
 		neighborNodes = new ArrayList<>();
+		
+		if(canRefuel)
+			refuelNodeList.add(this);
+		if(canRest)
+			restNodeList.add(this);
 	}
 
 	// getters & setters
@@ -43,25 +47,13 @@ public class Node {
 		return yCord;
 	}
 
-	public boolean canRefuel(){
-		return canRefuel;
-	}
-
-	public boolean canRest(){
-		return canRest;
-	}
-
-	public boolean isPointOfInterest(){
-		return isPointOfInterest;
-	}
-
 	public ArrayList<Edge> getNeighborNodes(){
 		return neighborNodes;
 	}
 
 	// functions
-	public void addEdge(Node neighborNode, int duration, float cost){
-		Edge thisEdge = new Edge(neighborNode, duration, cost);
+	public void addEdge(Node neighborNode, float cost){
+		Edge thisEdge = new Edge(neighborNode, cost);
 
 		if(!neighborNodes.contains(thisEdge))
 			neighborNodes.add(thisEdge);
@@ -80,8 +72,7 @@ public class Node {
 				&& this.xCord == that.xCord
 				&& this.yCord == that.yCord
 				&& this.canRefuel == that.canRefuel
-				&& this.canRest == that.canRest
-				&& this.isPointOfInterest == that.isPointOfInterest)
+				&& this.canRest == that.canRest)
 			return true;
 
 		return false;

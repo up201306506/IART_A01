@@ -1,18 +1,12 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -25,13 +19,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
-import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Menu extends JFrame{
+	
 	public static enum RestrictionType {
 		NO_RESTRICTION, COST, DURATION, DURATION_COST
 	}
+	
 	private JPanel formPanel, bottomPanel, filePanel, restrictionPanel, moneyPanel, depositPanel, hourPanel;
 	private JButton startButton,cancelButton,openFile;
 	private JLabel titleLabel,sourceLabel,destinationLabel, fileLabel, moneyLabel, errorLabel, depositLabel, hourLabel;
@@ -121,23 +116,18 @@ public class Menu extends JFrame{
 		radioButtons = new JRadioButton[5];
 		radioButtons[0] = new JRadioButton();
 		radioButtons[0].setText("Shortest path                                   ");
-		radioButtons[0].setHorizontalAlignment(SwingConstants.CENTER);
 		
 		radioButtons[1] = new JRadioButton();
 		radioButtons[1].setText("Cheapest path");
-		radioButtons[1].setHorizontalAlignment(SwingConstants.CENTER);
 		
 		radioButtons[2] = new JRadioButton();
 		radioButtons[2].setText("Quickest path");
-		radioButtons[2].setHorizontalAlignment(SwingConstants.CENTER);
 		
 		radioButtons[3] = new JRadioButton();
 		radioButtons[3].setText("Refuel");
-		radioButtons[3].setHorizontalAlignment(SwingConstants.CENTER);
 		
 		radioButtons[4] = new JRadioButton();
 		radioButtons[4].setText("Rest");
-		radioButtons[4].setHorizontalAlignment(SwingConstants.CENTER);
 	}
 	
 	private void createButtons(){

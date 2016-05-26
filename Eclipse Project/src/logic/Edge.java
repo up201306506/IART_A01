@@ -4,13 +4,11 @@ public class Edge {
 	
 	private Node neighborNode;
 	
-	private int duration; // minutes
 	private float cost;
 
-	public Edge(Node neighborNode, int duration, float cost){
+	public Edge(Node neighborNode, float cost){
 		this.neighborNode = neighborNode;
 		
-		this.duration = duration;
 		this.cost = cost;
 	}
 	
@@ -19,18 +17,16 @@ public class Edge {
 		return neighborNode;
 	}
 	
-	public int getDuration(){
-		return duration;
-	}
-	
 	public float getCost(){
 		return cost;
 	}
 	
 	// static methods, aux methods
-	public static void associateNodes(Node nodeA, Node nodeB, int duration, float cost){
-		nodeA.addEdge(nodeB, duration, cost);
-		nodeB.addEdge(nodeA, duration, cost);
+	public static void associateNodes(Node nodeA, Node nodeB, float cost){
+		if(nodeA.equals(nodeB)) return;
+		
+		nodeA.addEdge(nodeB, cost);
+		nodeB.addEdge(nodeA, cost);
 	}
 	
 	// overwrites
