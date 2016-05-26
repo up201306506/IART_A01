@@ -97,7 +97,9 @@ public class AStar {
 
 					// estimates the cost to the goal node
 					int priority = newCost + HeuristicsUtils.heuristic(settings, neighborNode, end,
-							restrictionType, costSoFar.get(neighborNode).distance);
+							restrictionType, costSoFar.get(neighborNode).distance, 
+							pathInformation.get(current.getNode()).currentGas,
+							pathInformation.get(current.getNode()).travelTime);
 					// add it to the list of nodes to be evaluated
 					frontier.add(new NodeScore(neighborNode, priority)); // possible path
 

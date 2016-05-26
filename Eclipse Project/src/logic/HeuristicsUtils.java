@@ -10,7 +10,7 @@ public class HeuristicsUtils {
 	// --- Heuristic Functions
 	// --------------------------------------
 	public static int heuristic(AlgorithmSettings settings, Node currentN, Node targetN,
-			ArrayList<RestrictionType> restrictionList, double distance){
+			ArrayList<RestrictionType> restrictionList, double distance, int currentGas, int travelTime){
 
 		// hscore
 		double h = 0;
@@ -28,13 +28,21 @@ public class HeuristicsUtils {
 				if(settings.varCostWeight <= 0) return 0;
 				else h += settings.varCostWeight * CostValue(currentN);
 			
-			if(restrictionType == RestrictionType.REFUEL)
-				if(settings.varRefuelWeight <= 0) return 0;
+			if(restrictionType == RestrictionType.REFUEL){
+				double distance_left = EuclideanDistance(currentN, targetN);
+				double distance_fuel_runs = currentGas / settings.averageGasConsume;
+					
+				if(settings.varRefuelWeight <= 0 || distance_left < distance_fuel_runs) return 0;
 				else h += settings.varRefuelWeight * FuelValue(currentN);
+			}
 			
-			if(restrictionType == RestrictionType.REST)
-				if(settings.varRestWeight <= 0) return 0;
+			if(restrictionType == RestrictionType.REST){
+				double distance_left = EuclideanDistance(currentN, targetN);
+				double distance_run_without_resting = travelTime * settings.averageSpeed; 
+				
+				if(settings.varRestWeight <= 0 || distance_left < distance_run_without_resting) return 0;
 				else h += settings.varRestWeight * RestValue(currentN);
+			}
 		}
 
 		return (int) Math.round(h);
