@@ -16,26 +16,26 @@ public class POI_HowTo {
 ArrayList<Node> nodeList = new ArrayList<>();
 		
 		// src node
-		Node start = new Node("Start", 0, 0, false, false, false);
+		Node start = new Node("Start", 0, 0, false, false);
 		nodeList.add(start);
 		
 		// path
-		Node b = new Node("B", 0, 1, false, false, false);
-		Node c = new Node("C", 1, 1, false, false, false);
-		Node d = new Node("D", 1, 2, false, false, false);
+		Node b = new Node("B", 0, 1, false, false);
+		Node c = new Node("C", 1, 1, false, false);
+		Node d = new Node("D", 1, 2, false, false);
 		
 		nodeList.add(b);
 		nodeList.add(c);
 		nodeList.add(d);
 		
-		Node poi1 = new Node("POI-1", 1, 0, false, false, false);
-		Node poi2 = new Node("POI-2", 2, 2, false, false, false);
+		Node poi1 = new Node("POI-1", 1, 0, false, false);
+		Node poi2 = new Node("POI-2", 2, 2, false, false);
 		
 		nodeList.add(poi1);
 		nodeList.add(poi2);
 		
 		// dest node
-		Node dest = new Node("Dest", 0, 2, false, false, false);
+		Node dest = new Node("Dest", 0, 2, false, false);
 		nodeList.add(dest);
 		
 		Edge.associateNodes(start, b, 1);

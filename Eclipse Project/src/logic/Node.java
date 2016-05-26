@@ -15,11 +15,9 @@ public class Node {
 	public boolean canRefuel;
 	public boolean canRest;
 
-	private boolean isPointOfInterest;
-
 	private ArrayList<Edge> neighborNodes;
 
-	public Node(String nodeName, float xCord, float yCord, boolean canRefuel, boolean canRest, boolean isPointOfInterest){
+	public Node(String nodeName, float xCord, float yCord, boolean canRefuel, boolean canRest){
 		this.nodeName = nodeName;
 
 		this.xCord = xCord;
@@ -27,8 +25,6 @@ public class Node {
 
 		this.canRefuel = canRefuel;
 		this.canRest = canRest;
-
-		this.isPointOfInterest = isPointOfInterest;
 
 		neighborNodes = new ArrayList<>();
 		
@@ -49,10 +45,6 @@ public class Node {
 
 	public float getYCord(){
 		return yCord;
-	}
-
-	public boolean isPointOfInterest(){
-		return isPointOfInterest;
 	}
 
 	public ArrayList<Edge> getNeighborNodes(){
@@ -80,8 +72,7 @@ public class Node {
 				&& this.xCord == that.xCord
 				&& this.yCord == that.yCord
 				&& this.canRefuel == that.canRefuel
-				&& this.canRest == that.canRest
-				&& this.isPointOfInterest == that.isPointOfInterest)
+				&& this.canRest == that.canRest)
 			return true;
 
 		return false;

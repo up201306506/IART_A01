@@ -16,13 +16,13 @@ public class TestPath_DistanceRestriction {
 		ArrayList<Node> nodeList = new ArrayList<>();
 		
 		// src node
-		Node a = new Node("A", 0, 0, false, false, false);
+		Node a = new Node("A", 0, 0, false, false);
 		nodeList.add(a);
 		
 		// path
-		Node b = new Node("B", 3, 0, false, false, false);
-		Node c = new Node("C", 0, 2, false, false, false);
-		Node d = new Node("D", 3, 3, false, false, false);
+		Node b = new Node("B", 3, 0, false, false);
+		Node c = new Node("C", 0, 2, false, false);
+		Node d = new Node("D", 3, 3, false, false);
 		
 		nodeList.add(b);
 		nodeList.add(c);

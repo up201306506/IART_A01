@@ -16,12 +16,12 @@ public class TestPath_NoRestrictions {
 		ArrayList<Node> nodeList = new ArrayList<>();
 		
 		// src node
-		Node a = new Node("A", 0, 0, false, false, false);
+		Node a = new Node("A", 0, 0, false, false);
 		nodeList.add(a);
 		
 		// path
-		Node b = new Node("B", 1, 1, false, false, false);
-		Node c = new Node("C", 2, 1, false, false, false);
+		Node b = new Node("B", 1, 1, false, false);
+		Node c = new Node("C", 2, 1, false, false);
 		
 		nodeList.add(b);
 		nodeList.add(c);
