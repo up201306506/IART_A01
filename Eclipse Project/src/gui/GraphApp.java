@@ -95,4 +95,9 @@ public class GraphApp {
 	public LinkedList<Node> getPOI(){
 		return poi;
 	}
+	
+	public void addSourceAndDestination(){
+		poi.addFirst(sourceNode);
+		poi.addLast(destinationNode);
+	}
 }
