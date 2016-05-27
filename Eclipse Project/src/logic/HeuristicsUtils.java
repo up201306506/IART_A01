@@ -21,29 +21,42 @@ public class HeuristicsUtils {
 				return 0;
 
 			if (restrictionType == RestrictionType.DISTANCE)
-				if(settings.varDistanceWeight <= 0) return 0;
+				if(settings.varDistanceWeight <= 0) h += 0;
 				else h += settings.varDistanceWeight * DistanceValue(currentN, targetN);
 
 			if (restrictionType == RestrictionType.COST)
-				if(settings.varCostWeight <= 0) return 0;
+				if(settings.varCostWeight <= 0) h += 0;
 				else h += settings.varCostWeight * CostValue(currentN);
 			
 			if(restrictionType == RestrictionType.REFUEL){
-				double distance_left = EuclideanDistance(currentN, targetN);
-				double distance_fuel_runs = currentGas / settings.averageGasConsume;
-					
-				if(settings.varRefuelWeight <= 0 || distance_left < distance_fuel_runs) return 0;
-				else h += settings.varRefuelWeight * FuelValue(currentN);
+				if(settings.varRefuelWeight <= 0) h += 0;
+				
+				double distanceLeft = EuclideanDistance(currentN, targetN);
+				double distanceToEmptyFuel = currentGas / settings.averageGasConsume;
+				double distanceToRefuel = FuelValue(currentN);
+				
+				double hFuel;
+				if(currentN.equals(targetN)) hFuel = 0;
+				else if(Node.refuelNodeList.contains(currentN)) hFuel = 0;
+				else if(distanceLeft < distanceToEmptyFuel) hFuel = distanceLeft * settings.averageGasConsume;
+				else if(distanceToRefuel < distanceToEmptyFuel) hFuel = distanceToRefuel * settings.averageGasConsume;
+				else hFuel = Integer.MAX_VALUE;
+				
+				h += settings.varRefuelWeight * hFuel;
 			}
 			
 			if(restrictionType == RestrictionType.REST){
+				if(settings.varRestWeight <= 0) h += 0;
+					
 				double distance_left = EuclideanDistance(currentN, targetN);
 				double distance_run_without_resting = travelTime * settings.averageSpeed; 
 				
-				if(settings.varRestWeight <= 0 || distance_left < distance_run_without_resting) return 0;
+				if(settings.varRestWeight <= 0 || distance_left < distance_run_without_resting)  h += 0;
 				else h += settings.varRestWeight * RestValue(currentN);
 			}
 		}
+		
+		System.err.println(h);
 
 		return (int) Math.round(h);
 	}
@@ -67,6 +80,21 @@ public class HeuristicsUtils {
 				minimumCost = neighbourEdge.getCost();
 		
 		return minimumCost.doubleValue();	
+	}
+	
+	private static double teste(Node currentN){
+		Double bestDist = null;
+		
+		for (Edge edge : currentN.getNeighborNodes()) {
+			Node neighborNode = edge.getNeighborNode();
+			
+			double dist = EuclideanDistance(currentN, neighborNode);
+			if(bestDist == null || dist < bestDist){
+				bestDist = dist;
+			}
+		}
+		
+		return bestDist;
 	}
 	
 	private static double FuelValue(Node currentN){

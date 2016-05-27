@@ -51,7 +51,7 @@ ArrayList<Node> nodeList = new ArrayList<>();
 
 		// since it does not have any restriction
 		// any weight is not important
-		AlgorithmSettings settings = new AlgorithmSettings(0, 0, 2.4f, 7, 30, 15, 0, 0, 0, 0);
+		AlgorithmSettings settings = new AlgorithmSettings(0, 0, 2.4f, 7, 30, 15, 0, 0);
 		
 		// HOW TO IMPLEMENT POI
 		LinkedList<Node> poi = new LinkedList<>();

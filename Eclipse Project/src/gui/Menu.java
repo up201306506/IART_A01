@@ -292,7 +292,7 @@ public class Menu extends JFrame {
 		//TODO
 		ArrayList<RestrictionType> restrictionList = new ArrayList<>();
 		restrictionList.add(RestrictionType.NO_RESTRICTION);
-		AlgorithmSettings settings = new AlgorithmSettings(0, 0, 2.4f, 7, 30, 15, 0, 0, 0, 0);
+		AlgorithmSettings settings = new AlgorithmSettings(0, 0, 2.4f, 7, 30, 15, 0, 0);
 		LinkedList<Node> poi = gApp.getPOI();
 		for(int i = 0; i < (poi.size() - 1); i++){
 			LinkedList<NodeStop> result = AStar.runAlgorithm(settings, settings.nextGasValue, settings.nextTravelTime,

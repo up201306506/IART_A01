@@ -35,7 +35,7 @@ public class TestPath_NoRestrictions {
 		
 		// since it doest not have any restriction
 		// any weight is not important
-		AlgorithmSettings settings = new AlgorithmSettings(0, 0, 2.4f, 7, 30, 15, 0, 0, 0, 0);
+		AlgorithmSettings settings = new AlgorithmSettings(0, 0, 2.4f, 7, 30, 15, 0, 0);
 		
 		LinkedList<NodeStop> result = AStar.runAlgorithm(settings, 0, 0, a, b, restrictionList);
 		for(NodeStop stop : result)
