@@ -122,4 +122,5 @@ public class GraphController extends Thread implements ViewerListener {
 	public boolean isValid(){
 		return source && destination;
 	}
+	
 }

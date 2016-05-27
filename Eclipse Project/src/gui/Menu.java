@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -24,19 +24,16 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.graphstream.ui.swingViewer.DefaultView;
-import org.graphstream.ui.swingViewer.ViewPanel;
-
-import sun.java2d.pipe.AAShapePipe;
+import logic.AStar;
+import logic.AlgorithmSettings;
 import logic.Node;
+import logic.NodeStop;
+import logic.AStar.RestrictionType;
 
-public class Menu extends JFrame{
-	
-	public static enum RestrictionType {
-		NO_RESTRICTION, COST, DURATION, DURATION_COST
-	}
+public class Menu extends JFrame {
 	
 	private JPanel dummyPanel, formPanel, bottomPanel, filePanel, restrictionPanel, gasPanel, timePanel, speedPanel, consumePanel, maxGasPanel;
 	private JButton startButton,cancelButton,openFile;
@@ -49,7 +46,8 @@ public class Menu extends JFrame{
 	private final Color menuColor = new Color(58,134,207); 
 	
 	private String source,destination;
-	private int option, gas,time,speed,consume,maxGas;
+	private int option, gas,time,maxGas;
+	private double speed, consume;
 	private File fileSelected;
 	
 	private GraphApp gApp;
@@ -73,7 +71,6 @@ public class Menu extends JFrame{
 		
 		createButtons();
 		createLabels();
-		createComboBoxes();
 		createRadioButtons();
 		createSpinners();
 		
@@ -164,9 +161,7 @@ public class Menu extends JFrame{
 			public void run () {
 				if(gApp.isValid()){
 					startButton.setEnabled(true);
-					System.out.println("is valid");
 				}else{
-					System.out.println("is not valid");
 				}
 			}
 		}, 0L,200L);
@@ -219,8 +214,6 @@ public class Menu extends JFrame{
 	            fileSelected = fileChooser.getSelectedFile();
 	            fileLabel.setText(fileSelected.getName());
 	            fileLabel.setForeground(Color.GREEN);
-	            sourceComboBox.setEnabled(true);
-	            destinationComboBox.setEnabled(true);
 	            remove(dummyPanel);
 	            add(gApp.getView());
 	            pack();
@@ -234,14 +227,12 @@ public class Menu extends JFrame{
 		startButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed (ActionEvent e) {
-				source = (String)sourceComboBox.getSelectedItem();
-				destination = (String)destinationComboBox.getSelectedItem();
 				gas = (int)gasSpinner.getValue();
 				maxGas = (int)maxGasSpinner.getValue();
-				speed = (int)speedSpinner.getValue();
-				consume = (int)consumeSpinner.getValue();
+				speed = (double)speedSpinner.getValue();
+				consume = (double)consumeSpinner.getValue();
 				time = (int)timeSpinner.getValue();
-				//TODO: Open graph viewer
+				showPath();
 			}
 		});
 		
@@ -273,11 +264,11 @@ public class Menu extends JFrame{
 		fileLabel = new JLabel("No File Selected");
 		fileLabel.setForeground(Color.RED);
 		
-		   gasLabel = new JLabel("Initial Gas Value:          ");
+		gasLabel = new JLabel("Initial Gas Value:          ");
 		maxGasLabel = new JLabel("Maximum Gas Deposit:");
-		 speedLabel = new JLabel("Average Speed:             ");
-	  consumeLabel = new JLabel("Average Gas Consume: ");
-		  timeLabel = new JLabel("Maximum Travel Time: ");
+		speedLabel = new JLabel("Average Speed:             ");
+		consumeLabel = new JLabel("Average Gas Consume: ");
+		timeLabel = new JLabel("Maximum Travel Time: ");
 	}
 	
 	private void createSpinners(){
@@ -287,37 +278,29 @@ public class Menu extends JFrame{
 		maxGasSpinner = new JSpinner();
 		maxGasSpinner.setPreferredSize(new Dimension(100,25));
 		
-		speedSpinner = new JSpinner();
+		speedSpinner = new JSpinner(new SpinnerNumberModel(0f, 0f, 100000.000f, 0.010f));
 		speedSpinner.setPreferredSize(new Dimension(100,25));
 		
-		consumeSpinner = new JSpinner();
+		consumeSpinner = new JSpinner(new SpinnerNumberModel(0f, 0f, 100000.000f, 0.010f));
 		consumeSpinner.setPreferredSize(new Dimension(100,25));
 		
 		timeSpinner = new JSpinner();
 		timeSpinner.setPreferredSize(new Dimension(100,25));
 	}
 	
-	private void createComboBoxes(){
-		sourceComboBox = new JComboBox<String>();
-		sourceComboBox.setAlignmentX(LEFT_ALIGNMENT);
-		sourceComboBox.setEnabled(false);
-		sourceComboBox.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed (ActionEvent e) {
-				System.out.println(sourceComboBox.getSelectedItem());
-			}
-		});
-		
-		
-		destinationComboBox = new JComboBox<String>();
-		destinationComboBox.setAlignmentX(LEFT_ALIGNMENT);
-		destinationComboBox.setEnabled(false);
-		destinationComboBox.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed (ActionEvent e) {
-				System.out.println(destinationComboBox.getSelectedItem());
-			}
-		});
+	private void showPath(){
+		//TODO
+		ArrayList<RestrictionType> restrictionList = new ArrayList<>();
+		restrictionList.add(RestrictionType.NO_RESTRICTION);
+		AlgorithmSettings settings = new AlgorithmSettings(0, 0, 2.4f, 7, 30, 15, 0, 0, 0, 0);
+		LinkedList<Node> poi = gApp.getPOI();
+		for(int i = 0; i < (poi.size() - 1); i++){
+			LinkedList<NodeStop> result = AStar.runAlgorithm(settings, settings.nextGasValue, settings.nextTravelTime,
+					poi.get(i), poi.get(i + 1), restrictionList);
+			
+			for(NodeStop stop : result)
+				System.out.println("-> " + stop.getNode().getName());
+		}
 	}
 	
 }
