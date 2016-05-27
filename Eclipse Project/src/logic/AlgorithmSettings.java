@@ -27,8 +27,9 @@ public class AlgorithmSettings {
 
 	public float varRefuelWeight;
 	public float varRestWeight;
-	
-	// var used to pass initial values to next iterations of A*
+
+	// var used to pass initial values
+	// to next iterations of A*
 	public int nextGasValue;
 	public int nextTravelTime;
 
@@ -38,7 +39,7 @@ public class AlgorithmSettings {
 			int maxTravelTime, // resting calculations @maxTravelTime in minutes
 			float distanceWeight, float costWeight, // algorithm restrictions weight
 			float refuelWeight, float restWeight){
-		
+
 		nextGasValue = initialGasVale;
 		nextTravelTime = initialTimeTravelValue;
 
@@ -57,6 +58,17 @@ public class AlgorithmSettings {
 
 	public void setNewWeights(int gasValue, int travelTimeValue, ArrayList<RestrictionType> restrictionList){
 
+		// if no fuel or rest restrictions are to be taken into account
+		if(!restrictionList.contains(RestrictionType.REFUEL) && !restrictionList.contains(RestrictionType.REST)){
+			varDistanceWeight = distanceWeight;
+			varCostWeight = costWeight;
+
+			varRefuelWeight = refuelWeight;
+			varRestWeight = restWeight;
+			
+			return;
+		}
+
 		// if both fuel and rest restrictions are to be taken into account
 		if(restrictionList.contains(RestrictionType.REFUEL) && restrictionList.contains(RestrictionType.REST)){
 			float refuelPercentage = gasValue / maxGasDeposit;
@@ -73,6 +85,8 @@ public class AlgorithmSettings {
 
 			varRefuelWeight = newRefuelWeight - (restTimePercentage / 3);
 			varRestWeight = newRestWeight - (restRefuelPercentage / 3);
+			
+			return;
 		}
 
 		// if a fuel or rest restriction is set
@@ -87,6 +101,8 @@ public class AlgorithmSettings {
 			varCostWeight = costWeight - (restPercentage / 3);
 
 			varRestWeight = restWeight - (restPercentage / 3);
+			
+			return;
 		}
 
 		if(restrictionList.contains(RestrictionType.REST)){
@@ -100,15 +116,8 @@ public class AlgorithmSettings {
 			varCostWeight = costWeight - (restPercentage / 3);
 
 			varRefuelWeight = refuelWeight - (restPercentage / 3);
-		}
-
-		// if no fuel or rest restrictions are to be taken into account
-		if(!restrictionList.contains(RestrictionType.REFUEL) && !restrictionList.contains(RestrictionType.REST)){
-			varDistanceWeight = distanceWeight;
-			varCostWeight = costWeight;
-
-			varRefuelWeight = refuelWeight;
-			varRestWeight = restWeight;
+			
+			return;
 		}
 	}
 
