@@ -14,6 +14,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoundedRangeModel;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -23,8 +24,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import logic.AStar;
@@ -42,6 +46,8 @@ public class Menu extends JFrame {
 	private JFileChooser fileChooser;
 	private JRadioButton noRestrictionButton;
 	private JRadioButton[] radioButtons;
+	private JSlider[] sliders;
+	private JLabel[] restrictionLabels;
 	private JSpinner gasSpinner, timeSpinner, speedSpinner, consumeSpinner, maxGasSpinner;
 	private final Color menuColor = new Color(58,134,207); 
 	
@@ -120,14 +126,35 @@ public class Menu extends JFrame {
 		timePanel.setBackground(menuColor);
 		
 		restrictionPanel = new JPanel();
+		restrictionPanel.setAlignmentX(LEFT_ALIGNMENT);
 		restrictionPanel.setLayout(new BoxLayout(restrictionPanel, BoxLayout.Y_AXIS));
 		restrictionPanel.setBackground(menuColor);
+		sliders = new JSlider[4];
+		restrictionLabels = new JLabel[4];
 		for (int i = 0; i < radioButtons.length; i++) {
-			restrictionPanel.add(radioButtons[i]);
+			JPanel restPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+			restPanel.setBackground(menuColor);
+			sliders[i] = new JSlider(0,100);
+			sliders[i].setEnabled(false);
+			sliders[i].addChangeListener(new ChangeListener() {
+				@Override
+				public void stateChanged (ChangeEvent e) {
+					for (int j = 0; j < sliders.length; j++) {
+						if(e.getSource() == sliders[j]){
+							restrictionLabels[j].setText(sliders[j].getValue()+"%");
+						}
+					}
+				}
+			});
+			restrictionLabels[i] = new JLabel(sliders[i].getValue()+"%");
+			restrictionLabels[i].setEnabled(false);
+			restrictionLabels[i].setSize(new Dimension(10,10));
+			restPanel.add(radioButtons[i]);
+			restPanel.add(sliders[i]);
+			restPanel.add(restrictionLabels[i]);
+			restrictionPanel.add(restPanel);
 		}
-		restrictionPanel.setBorder(BorderFactory.createCompoundBorder(
-			BorderFactory.createTitledBorder("Choose restrictions"),
-			BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+		
 		
 		formPanel.add(titleLabel);
 		formPanel.add(filePanel);
@@ -159,9 +186,10 @@ public class Menu extends JFrame {
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run () {
-				if(gApp.isValid()){
+				if(gApp.isValid() && slidersValid()){
 					startButton.setEnabled(true);
 				}else{
+					startButton.setEnabled(false);
 				}
 			}
 		}, 0L,200L);
@@ -170,7 +198,8 @@ public class Menu extends JFrame {
 	
 	private void createRadioButtons(){
 		noRestrictionButton = new JRadioButton();
-		noRestrictionButton.setText("No restrictions");
+		noRestrictionButton.setText("No restrictions                                                    ");
+		noRestrictionButton.setBackground(menuColor);
 		noRestrictionButton.setSelected(true);
 		noRestrictionButton.addActionListener(new ActionListener() {
 			@Override
@@ -178,8 +207,14 @@ public class Menu extends JFrame {
 				for (int i = 0; i < radioButtons.length; i++) {
 					if(noRestrictionButton.isSelected()){
 						radioButtons[i].setEnabled(false);
+						sliders[i].setEnabled(false);
+						restrictionLabels[i].setEnabled(false);
 					}else{
 						radioButtons[i].setEnabled(true);
+						if(radioButtons[i].isSelected()){
+							sliders[i].setEnabled(true);
+							restrictionLabels[i].setEnabled(true);
+						}
 					}
 				}
 			}
@@ -187,20 +222,72 @@ public class Menu extends JFrame {
 		
 		radioButtons = new JRadioButton[4];
 		radioButtons[0] = new JRadioButton();
-		radioButtons[0].setText("Distance                                      ");
+		radioButtons[0].setText("Distance");
 		radioButtons[0].setEnabled(false);
+		radioButtons[0].setBackground(menuColor);
+		radioButtons[0].addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed (ActionEvent e) {
+				if(radioButtons[0].isSelected()){
+					sliders[0].setEnabled(true);
+					restrictionLabels[0].setEnabled(true);
+				}else{
+					sliders[0].setEnabled(false);
+					restrictionLabels[0].setEnabled(false);
+				}
+			}
+		});
 		
 		radioButtons[1] = new JRadioButton();
 		radioButtons[1].setText("Cost");
 		radioButtons[1].setEnabled(false);
+		radioButtons[1].setBackground(menuColor);
+		radioButtons[1].addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed (ActionEvent e) {
+				if(radioButtons[1].isSelected()){
+					sliders[1].setEnabled(true);
+					restrictionLabels[1].setEnabled(true);
+				}else{
+					sliders[1].setEnabled(false);
+					restrictionLabels[1].setEnabled(false);
+				}
+			}
+		});
 		
 		radioButtons[2] = new JRadioButton();
 		radioButtons[2].setText("Refuel");
 		radioButtons[2].setEnabled(false);
+		radioButtons[2].setBackground(menuColor);
+		radioButtons[2].addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed (ActionEvent e) {
+				if(radioButtons[2].isSelected()){
+					sliders[2].setEnabled(true);
+					restrictionLabels[2].setEnabled(true);
+				}else{
+					sliders[2].setEnabled(false);
+					restrictionLabels[2].setEnabled(false);
+				}
+			}
+		});
 		
 		radioButtons[3] = new JRadioButton();
 		radioButtons[3].setText("Rest");
 		radioButtons[3].setEnabled(false);
+		radioButtons[3].setBackground(menuColor);
+		radioButtons[3].addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed (ActionEvent e) {
+				if(radioButtons[3].isSelected()){
+					sliders[3].setEnabled(true);
+					restrictionLabels[3].setEnabled(true);
+				}else{
+					sliders[3].setEnabled(false);
+					restrictionLabels[3].setEnabled(false);
+				}
+			}
+		});
 	}
 	
 	private void createButtons(){
@@ -264,11 +351,13 @@ public class Menu extends JFrame {
 		fileLabel = new JLabel("No File Selected");
 		fileLabel.setForeground(Color.RED);
 		
-		gasLabel = new JLabel("Initial Gas Value:          ");
+		gasLabel = new JLabel("Initial Gas Value:");
 		maxGasLabel = new JLabel("Maximum Gas Deposit:");
-		speedLabel = new JLabel("Average Speed:             ");
-		consumeLabel = new JLabel("Average Gas Consume: ");
-		timeLabel = new JLabel("Maximum Travel Time: ");
+		speedLabel = new JLabel("Average Speed:");
+		consumeLabel = new JLabel("Average Gas Consume:");
+		timeLabel = new JLabel("Maximum Travel Time:");
+		
+		
 	}
 	
 	private void createSpinners(){
@@ -300,6 +389,20 @@ public class Menu extends JFrame {
 			
 			for(NodeStop stop : result)
 				System.out.println("-> " + stop.getNode().getName());
+		}
+	}
+	
+	private boolean slidersValid(){
+		if(noRestrictionButton.isSelected()){
+			return true;
+		}else{
+			int sum = 0;
+			for (int i = 0; i < radioButtons.length; i++) {
+				if(radioButtons[i].isSelected()){
+					sum += sliders[i].getValue();
+				}
+			}
+			return sum == 100;
 		}
 	}
 	
