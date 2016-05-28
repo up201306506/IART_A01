@@ -18,9 +18,6 @@ public class AlgorithmSettings {
 	private float distanceWeight;
 	private float costWeight;
 
-	private float refuelWeight;
-	private float restWeight;
-
 	// var restrictions weight
 	public float varDistanceWeight;
 	public float varCostWeight;
@@ -50,11 +47,11 @@ public class AlgorithmSettings {
 
 		this.distanceWeight = distanceWeight;
 		this.costWeight = costWeight;
-		
+
 		// assign values for vars
 		this.varDistanceWeight = distanceWeight;
 		this.varCostWeight = costWeight;
-		
+
 		this.varRefuelWeight = 0;
 		this.varRestWeight = 0;
 	}
@@ -66,37 +63,33 @@ public class AlgorithmSettings {
 			varDistanceWeight = distanceWeight;
 			varCostWeight = costWeight;
 
-			varRefuelWeight = refuelWeight;
-			varRestWeight = restWeight;
-			
+			varRefuelWeight = 0;
+			varRestWeight = 0;
+
 			return;
 		}
 
 		// if both fuel and rest restrictions are to be taken into account
 		if(restrictionList.contains(RestrictionType.REFUEL) && restrictionList.contains(RestrictionType.REST)){
 			float refuelPercentage = (float) gasValue / maxGasDeposit;
-			float newRefuelWeight = (float) getFuelWeightDiff(refuelPercentage);
+			float newRefuelWeight = 1 - (float) getFuelWeightDiff(refuelPercentage);
 
 			float timePercentage = (float) travelTimeValue / maxTravelTime;
-			float newRestWeight = (float) getRestWeightDiff(timePercentage);
+			float newRestWeight = 1 - (float) getRestWeightDiff(timePercentage);
 
-			float restRefuelPercentage = 1 - refuelPercentage;
-			float restTimePercentage = 1 - timePercentage;
+			varRefuelWeight = newRefuelWeight;
+			varRestWeight = newRestWeight;
 
-			varDistanceWeight = distanceWeight - (restRefuelPercentage / 3) - (restTimePercentage / 3);
-			varCostWeight = costWeight - (restRefuelPercentage / 3) - (restTimePercentage / 3);
+			varCostWeight = 0;
+			varDistanceWeight = 0;
 
-			varRefuelWeight = newRefuelWeight - (restTimePercentage / 3);
-			varRestWeight = newRestWeight - (restRefuelPercentage / 3);
-			
 			return;
 		}
-
-		// if a fuel or rest restriction is set
+		
 		if(restrictionList.contains(RestrictionType.REFUEL)){
-			
+
 			float percentage = 1 - (float) gasValue / maxGasDeposit;
-			
+
 			float newRefuelWeight = (float) getFuelWeightDiff(percentage);
 			varRefuelWeight = newRefuelWeight;
 
@@ -111,17 +104,16 @@ public class AlgorithmSettings {
 		}
 
 		if(restrictionList.contains(RestrictionType.REST)){
-			float percentage = (float) travelTimeValue / maxTravelTime;
+			float percentage = 1 - (float) travelTimeValue / maxTravelTime;
 			float newRestWeight = (float) getRestWeightDiff(percentage);
 			varRestWeight = newRestWeight;
 
 			float restPercentage = 1 - newRestWeight;
 
-			varDistanceWeight = distanceWeight - (restPercentage / 3);
-			
-			varCostWeight = costWeight - (restPercentage / 3);
+			varDistanceWeight = distanceWeight * restPercentage;
+			varCostWeight = costWeight * restPercentage;
 
-			varRefuelWeight = refuelWeight - (restPercentage / 3);
+			varRefuelWeight = 0;
 			
 			return;
 		}

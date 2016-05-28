@@ -27,38 +27,43 @@ public class HeuristicsUtils {
 			if (restrictionType == RestrictionType.COST)
 				if(settings.varCostWeight <= 0) h += 0;
 				else h += settings.varCostWeight * CostValue(currentN);
-			
+
 			if(restrictionType == RestrictionType.REFUEL){
 				if(settings.varRefuelWeight <= 0) h += 0;
-				
+
 				double distanceLeft = EuclideanDistance(currentN, targetN);
 				double distanceToEmptyFuel = currentGas / settings.averageGasConsume;
 				double distanceToRefuel = FuelValue(currentN);
-				
+
 				double hFuel;
 				if(currentN.equals(targetN)) hFuel = 0;
 				else if(Node.refuelNodeList.contains(currentN)) hFuel = 0;
 				else if(distanceLeft < distanceToEmptyFuel) hFuel = distanceLeft * settings.averageGasConsume;
 				else if(distanceToRefuel < distanceToEmptyFuel) hFuel = distanceToRefuel * settings.averageGasConsume;
 				else hFuel = Integer.MAX_VALUE;
-				
+
 				h += settings.varRefuelWeight * hFuel;
 			}
-			
+
 			if(restrictionType == RestrictionType.REST){
 				if(settings.varRestWeight <= 0) h += 0;
-					
-				double distance_left = EuclideanDistance(currentN, targetN);
-				double distance_run_without_resting = travelTime * settings.averageSpeed; 
+
+				double distanceLeft = EuclideanDistance(currentN, targetN);
+				double distanceNeedToRest = travelTime / settings.averageSpeed;
+				double distanceToRest = RestValue(currentN);
 				
-				if(settings.varRestWeight <= 0 || distance_left < distance_run_without_resting)  h += 0;
-				else h += settings.varRestWeight * RestValue(currentN);
+				double hRest;
+				if(currentN.equals(targetN)) hRest = 0;
+				else if(Node.restNodeList.contains(currentN)) hRest = 0;
+				else if(distanceLeft < distanceNeedToRest) hRest = distanceLeft * settings.averageSpeed;
+				else if(distanceToRest < distanceNeedToRest) hRest = distanceToRest * settings.averageSpeed;
+				else hRest = Integer.MAX_VALUE;
+
+				h += settings.varRestWeight * hRest;
 			}
 		}
-		
-		System.err.println(h);
 
-		return (int) Math.round(h);
+		return (int) Math.round(h * 20);
 	}
 
 	// --------------------------------------
@@ -67,7 +72,7 @@ public class HeuristicsUtils {
 
 	// Functions for checking the value of each parameter of the search.
 	// Keeping EuclideanDistance public because it might have uses outside this class
-	
+
 	private static double DistanceValue(Node currentN, Node targetN){
 		//Equals its Euclidean Distance
 		return EuclideanDistance(currentN, targetN);
@@ -78,33 +83,18 @@ public class HeuristicsUtils {
 		for(Edge neighbourEdge : currentN.getNeighborNodes())
 			if(minimumCost == null || minimumCost > neighbourEdge.getCost() )
 				minimumCost = neighbourEdge.getCost();
-		
+
 		return minimumCost.doubleValue();	
 	}
-	
-	private static double teste(Node currentN){
-		Double bestDist = null;
-		
-		for (Edge edge : currentN.getNeighborNodes()) {
-			Node neighborNode = edge.getNeighborNode();
-			
-			double dist = EuclideanDistance(currentN, neighborNode);
-			if(bestDist == null || dist < bestDist){
-				bestDist = dist;
-			}
-		}
-		
-		return bestDist;
-	}
-	
+
 	private static double FuelValue(Node currentN){
 		Node closestRefuel = findClosestRefuel(currentN);
-		return EuclideanDistance(currentN,closestRefuel);
+		return EuclideanDistance(currentN, closestRefuel);
 	}
-	
+
 	private static double RestValue(Node currentN){
-		Node closestRefuel = findClosestRest(currentN);
-		return EuclideanDistance(currentN,closestRefuel);
+		Node closestRest = findClosestRest(currentN);
+		return EuclideanDistance(currentN, closestRest);
 	}
 
 	// public aux functions
@@ -113,26 +103,26 @@ public class HeuristicsUtils {
 		double dy = Math.abs(B.getYCord() - A.getYCord());
 		return Math.sqrt(dx * dx + dy * dy);
 	}
-	
+
 	public static Node findClosestRefuel(Node currentN){
-			Node result = null;
-			Double bestDist = null;
-			
-			for (Node tempN : Node.refuelNodeList) {
-				double dist = EuclideanDistance(currentN, tempN);
-				if(result == null || dist < bestDist){
-					result = tempN;
-					bestDist = dist;
-				}
+		Node result = null;
+		Double bestDist = null;
+
+		for (Node tempN : Node.refuelNodeList) {
+			double dist = EuclideanDistance(currentN, tempN);
+			if(result == null || dist < bestDist){
+				result = tempN;
+				bestDist = dist;
 			}
-			
-			return result;
+		}
+
+		return result;
 	}
-	
+
 	public static Node findClosestRest(Node currentN){
 		Node result = null;
 		Double bestDist = null;
-		
+
 		for (Node tempN : Node.restNodeList) {
 			double dist = EuclideanDistance(currentN, tempN);
 			if(result == null || dist < bestDist){
@@ -140,7 +130,7 @@ public class HeuristicsUtils {
 				bestDist = dist;
 			}
 		}
-		
+
 		return result;
 	}
 }

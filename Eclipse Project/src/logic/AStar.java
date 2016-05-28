@@ -64,7 +64,7 @@ public class AStar {
 			}
 
 			// if rest weight is high and this node allow resting, will rest
-			if(current.getNode().canRest && (settings.varRestWeight > 0.8)){
+			if(current.getNode().canRest && (settings.varRestWeight > 0.7)){
 				int oldGas = pathInformation.get(current.getNode()).currentGas;
 
 				pathInformation.remove(current.getNode());
@@ -123,8 +123,6 @@ public class AStar {
 							pathInformation.get(neighborNode).travelTime);
 					// add it to the list of nodes to be evaluated
 					frontier.add(new NodeScore(neighborNode, priority)); // possible path
-					
-					System.err.println(current.getNode().getName() + "#" + neighborNode.getName() + " - " + newCost + " / " + priority);
 
 					// updates the predecessor node to this node
 					if(cameFrom.containsKey(neighborNode))
