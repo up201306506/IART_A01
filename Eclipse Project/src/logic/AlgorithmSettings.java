@@ -7,7 +7,7 @@ import logic.AStar.RestrictionType;
 public class AlgorithmSettings {
 
 	// algorithm constants
-	public float averageSpeed;
+	public float averageDurationByDistance; // 1 / averageSpeed
 	public float averageGasConsume;
 
 	// max values for fuel and travel time
@@ -32,17 +32,16 @@ public class AlgorithmSettings {
 
 	// set values used in the algorithm
 	public AlgorithmSettings(int initialGasVale, int initialTimeTravelValue, // initial values for algorithm
-			float averageSpeed, float averageGasConsume, int maxGasDeposit, // refueling calculations
+			float averageDurationByDistance, float averageGasConsume, int maxGasDeposit, // refueling calculations
 			int maxTravelTime, // resting calculations @maxTravelTime in minutes
 			float distanceWeight, float costWeight){ // algorithm restrictions weight
 
 		this.nextGasValue = initialGasVale;
 		this.nextTravelTime = initialTimeTravelValue;
 
-		this.averageSpeed = averageSpeed;
+		this.averageDurationByDistance = averageDurationByDistance;
 		this.averageGasConsume = averageGasConsume;
 		this.maxGasDeposit = maxGasDeposit;
-
 		this.maxTravelTime = maxTravelTime;
 
 		this.distanceWeight = distanceWeight;
@@ -69,27 +68,8 @@ public class AlgorithmSettings {
 			return;
 		}
 
-		// if both fuel and rest restrictions are to be taken into account
-		if(restrictionList.contains(RestrictionType.REFUEL) && restrictionList.contains(RestrictionType.REST)){
-			float refuelPercentage = (float) gasValue / maxGasDeposit;
-			float newRefuelWeight = 1 - (float) getFuelWeightDiff(refuelPercentage);
-
-			float timePercentage = (float) travelTimeValue / maxTravelTime;
-			float newRestWeight = 1 - (float) getRestWeightDiff(timePercentage);
-
-			varRefuelWeight = newRefuelWeight;
-			varRestWeight = newRestWeight;
-
-			varCostWeight = 0;
-			varDistanceWeight = 0;
-
-			return;
-		}
-		
 		if(restrictionList.contains(RestrictionType.REFUEL)){
-
 			float percentage = 1 - (float) gasValue / maxGasDeposit;
-
 			float newRefuelWeight = (float) getFuelWeightDiff(percentage);
 			varRefuelWeight = newRefuelWeight;
 
@@ -99,7 +79,7 @@ public class AlgorithmSettings {
 			varCostWeight = costWeight * restPercentage;
 
 			varRestWeight = 0;
-			
+
 			return;
 		}
 
@@ -114,7 +94,7 @@ public class AlgorithmSettings {
 			varCostWeight = costWeight * restPercentage;
 
 			varRefuelWeight = 0;
-			
+
 			return;
 		}
 	}
@@ -126,8 +106,8 @@ public class AlgorithmSettings {
 	}
 
 	public static double getRestWeightDiff(float percentage){
-		double temp = Math.exp(1) * percentage;
-		temp = Math.exp(-9 / (Math.pow(1.5, 15)));
-		return temp;
+		double temp = 1.5 * percentage;
+		double result = Math.exp(-9 / (Math.pow(temp, 15)));
+		return result;
 	}
 }

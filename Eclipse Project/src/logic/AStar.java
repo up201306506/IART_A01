@@ -64,7 +64,7 @@ public class AStar {
 			}
 
 			// if rest weight is high and this node allow resting, will rest
-			if(current.getNode().canRest && (settings.varRestWeight > 0.7)){
+			if(current.getNode().canRest && (settings.varRestWeight > 0.5)){
 				int oldGas = pathInformation.get(current.getNode()).currentGas;
 
 				pathInformation.remove(current.getNode());

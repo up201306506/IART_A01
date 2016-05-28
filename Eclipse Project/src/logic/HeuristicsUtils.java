@@ -49,14 +49,14 @@ public class HeuristicsUtils {
 				if(settings.varRestWeight <= 0) h += 0;
 
 				double distanceLeft = EuclideanDistance(currentN, targetN);
-				double distanceNeedToRest = travelTime / settings.averageSpeed;
+				double distanceNeedToRest = travelTime / settings.averageDurationByDistance;
 				double distanceToRest = RestValue(currentN);
 				
 				double hRest;
 				if(currentN.equals(targetN)) hRest = 0;
 				else if(Node.restNodeList.contains(currentN)) hRest = 0;
-				else if(distanceLeft < distanceNeedToRest) hRest = distanceLeft * settings.averageSpeed;
-				else if(distanceToRest < distanceNeedToRest) hRest = distanceToRest * settings.averageSpeed;
+				else if(distanceLeft < distanceNeedToRest) hRest = (float) distanceLeft * settings.averageDurationByDistance;
+				else if(distanceToRest < distanceNeedToRest) hRest = (float) distanceToRest * settings.averageDurationByDistance;
 				else hRest = Integer.MAX_VALUE;
 
 				h += settings.varRestWeight * hRest;
