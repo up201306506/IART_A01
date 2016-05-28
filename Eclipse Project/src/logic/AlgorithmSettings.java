@@ -67,6 +67,22 @@ public class AlgorithmSettings {
 
 			return;
 		}
+		
+		if(restrictionList.contains(RestrictionType.REFUEL) && restrictionList.contains(RestrictionType.REST)){
+			float refuelPercentage = gasValue / maxGasDeposit;
+			float newRefuelWeight = (float) getFuelWeightDiff(refuelPercentage);
+
+			float timePercentage = travelTimeValue / maxTravelTime;
+			float newRestWeight = (float) getRestWeightDiff(timePercentage);
+
+			float restPercentage = 1 - Math.max(newRefuelWeight, newRestWeight);
+
+			varDistanceWeight = distanceWeight * restPercentage;
+			varCostWeight = costWeight * restPercentage;
+
+			varRefuelWeight = newRefuelWeight;
+			varRestWeight = newRestWeight;
+		}
 
 		if(restrictionList.contains(RestrictionType.REFUEL)){
 			float percentage = 1 - (float) gasValue / maxGasDeposit;
