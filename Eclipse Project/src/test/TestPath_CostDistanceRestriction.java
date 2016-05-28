@@ -36,12 +36,12 @@ public class TestPath_CostDistanceRestriction {
 		
 		ArrayList<RestrictionType> restrictionList = new ArrayList<>();
 		restrictionList.add(RestrictionType.DISTANCE);
-		//restrictionList.add(RestrictionType.COST);
+		restrictionList.add(RestrictionType.COST);
 		
 		// distance weight is max
 		//@param initialGasVale, initialTimeTravelValue, averageDurationByDistance, averageGasConsume,
 		// maxGasDeposit, maxTravelTime, distanceWeight, costWeight
-		AlgorithmSettings settings = new AlgorithmSettings(99, 99, 10, 10, 100, 100, 0.4f, 0.6f);
+		AlgorithmSettings settings = new AlgorithmSettings(99, 99, 10, 10, 100, 100, 0.6f, 0.4f);
 		
 		LinkedList<NodeStop> result = AStar.runAlgorithm(settings,
 				settings.nextGasValue, settings.nextTravelTime, src, dest, restrictionList);
