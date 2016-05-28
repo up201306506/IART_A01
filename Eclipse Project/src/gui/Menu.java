@@ -14,7 +14,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoundedRangeModel;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -155,7 +154,6 @@ public class Menu extends JFrame {
 			restrictionPanel.add(restPanel);
 		}
 		
-		
 		formPanel.add(titleLabel);
 		formPanel.add(filePanel);
 		formPanel.add(gasPanel);
@@ -193,7 +191,6 @@ public class Menu extends JFrame {
 				}
 			}
 		}, 0L,200L);
-		
 	}
 	
 	private void createRadioButtons(){
@@ -356,8 +353,6 @@ public class Menu extends JFrame {
 		speedLabel = new JLabel("Average Speed:");
 		consumeLabel = new JLabel("Average Gas Consume:");
 		timeLabel = new JLabel("Maximum Travel Time:");
-		
-		
 	}
 	
 	private void createSpinners(){
@@ -405,5 +400,4 @@ public class Menu extends JFrame {
 			return sum == 100;
 		}
 	}
-	
 }
