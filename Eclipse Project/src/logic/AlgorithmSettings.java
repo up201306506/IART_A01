@@ -15,8 +15,8 @@ public class AlgorithmSettings {
 	public int maxTravelTime;
 
 	// restrictions weight
-	private float distanceWeight;
-	private float costWeight;
+	public float distanceWeight;
+	public float costWeight;
 
 	// var restrictions weight
 	public float varDistanceWeight;

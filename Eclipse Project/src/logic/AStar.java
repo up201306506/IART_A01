@@ -123,6 +123,8 @@ public class AStar {
 							pathInformation.get(neighborNode).travelTime);
 					// add it to the list of nodes to be evaluated
 					frontier.add(new NodeScore(neighborNode, priority)); // possible path
+					
+					System.err.println(current.getNode().getName()+"#"+neighborNode.getName()+" - "+newCost+" | "+priority);
 
 					// updates the predecessor node to this node
 					if(cameFrom.containsKey(neighborNode))
