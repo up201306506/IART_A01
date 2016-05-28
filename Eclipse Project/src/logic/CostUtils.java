@@ -33,7 +33,7 @@ public class CostUtils {
 				g += RestValue(predecessorNode, neighborNode, settings);
 		}
 
-		return (int) Math.round(g);
+		return (int) Math.round(g * 20);
 	}
 
 	// --------------------------------------
