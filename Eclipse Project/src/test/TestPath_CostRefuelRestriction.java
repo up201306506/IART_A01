@@ -10,7 +10,7 @@ import logic.Node;
 import logic.NodeStop;
 import logic.AStar.RestrictionType;
 
-public class TestPath_FuelRestriction {
+public class TestPath_CostRefuelRestriction {
 	
 	public static void main(String[] args) {
 		ArrayList<Node> nodeList = new ArrayList<>();
@@ -39,7 +39,7 @@ public class TestPath_FuelRestriction {
 		restrictionList.add(RestrictionType.COST);
 		
 		// distance weight is max
-		//@param initialGasVale, initialTimeTravelValue, averageSpeed, averageGasConsume,
+		//@param initialGasVale, initialTimeTravelValue, averageDurationByDistance, averageGasConsume,
 		// maxGasDeposit, maxTravelTime, distanceWeight, costWeight
 		AlgorithmSettings settings = new AlgorithmSettings(22, 70, 10, 10, 100, 100, 0, 1);
 		
@@ -48,6 +48,7 @@ public class TestPath_FuelRestriction {
 		for(NodeStop stop : result)
 			System.out.println("-> " + stop.getNode().getName() + "\t-- " + stop.stoppedToRefuel);
 		
-		// should print src - r - dest
+		// with initialGasValue = 22, should print src - r - dest
+		// with initialGasValue = 70, should print src - l - dest
 	}
 }

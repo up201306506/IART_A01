@@ -58,6 +58,6 @@ public class CostUtils {
 
 	public static int RestValue(Node predecessorNode, Node neighborNode, AlgorithmSettings settings){
 		double distance = HeuristicsUtils.EuclideanDistance(predecessorNode, neighborNode);
-		return (int) Math.round(distance / settings.averageSpeed);
+		return (int) Math.round(distance * settings.averageDurationByDistance);
 	}
 }
