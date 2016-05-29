@@ -4,11 +4,13 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import org.graphstream.graph.EdgeRejectedException;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.swingViewer.ViewPanel;
 import org.graphstream.ui.view.Viewer;
 
+import logic.Edge;
 import logic.Node;
 import logic.NodeStop;
 
@@ -54,11 +56,15 @@ public class GraphApp {
 		}
 		
 		// add edges
-		graph.addEdge("AB", "A", "B");
-		graph.addEdge("BC", "B", "C");
-		graph.addEdge("CD", "C", "D");
-		graph.addEdge("DE", "D", "E");
-		// TODO
+		for(Node node : nodeList){
+			for(Edge edge : node.getNeighborNodes()){
+				try{
+					graph.addEdge(node.getName() + edge.getNeighborNode().getName(),
+						node.getName(), edge.getNeighborNode().getName());
+				}catch(EdgeRejectedException e){
+				}
+			}
+		}
 	}
 	
 	public void display(){

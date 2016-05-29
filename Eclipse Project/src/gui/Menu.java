@@ -31,7 +31,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import logic.AStar;
 import logic.AlgorithmSettings;
-import logic.Edge;
 import logic.Node;
 import logic.NodeStop;
 import logic.AStar.RestrictionType;

@@ -1,4 +1,64 @@
-logic.Node@578486a3
-logic.Node@551aa95a
-logic.Node@35d176f7
-logic.Node@1dfe2924
+N0 10 15 true false
+N1 15 18 false true
+N2 -4 -9 false false
+N3 10 3 true false
+N4 -7 -11 false true 
+N5 4 -3 false false
+N6 0 0 false true
+N7 5 5 true false
+N8 4 -20 false false
+N9 30 4 false false
+N10 -10 7 false false
+N11 -4 -5 true false
+N12 -15 -8 false false
+N13 18 -20 true true
+N14 30 -15 false false
+N15 -10 -25 true true
+N16 -17 -3 false false
+N17 11 26 true false
+N18 10 -25 false true
+N19 0 -20 false false
+N20 -26 -3 false true 
+N21 15 24 true false
+N22 -4 28 false false
+N23 -22 13 true false
+N24 1 -2 true false
+N25 9 -10 false true
+EDGES
+N23 N22 0
+N23 N20 0
+N22 N17 0
+N22 N10 0
+N10 N0 0
+N0 N17 0
+N17 N21 0
+N21 N1 0
+N0 N1 0
+N1 N9 0
+N9 N14 0
+N9 N3 0
+N0 N7 0
+N7 N3 0
+N10 N16 0
+N16 N20 0
+N20 N12 0
+N12 N16 0
+N12 N15 0
+N15 N4 0
+N15 N18 0
+N4 N11 0
+N11 N2 0
+N4 N2 0
+N10 N11 0
+N11 N24 0
+N24 N6 0
+N6 N7 0
+N24 N5 0
+N5 N25 0
+N25 N3 0
+N25 N14 0
+N13 N14 0
+N18 N13 0
+N8 N18 0
+N19 N8 0
+N19 N2 0
