@@ -20,10 +20,10 @@ public class CostUtils {
 			if(restrictionType == RestrictionType.NO_RESTRICTION)
 				return 1;
 
-			if (restrictionType == RestrictionType.DISTANCE)
+			if (restrictionType == RestrictionType.DISTANCE && settings.distanceWeight > 0.5)
 				g += DistanceValue(predecessorNode, neighborNode);
 
-			if (restrictionType == RestrictionType.COST)
+			if (restrictionType == RestrictionType.COST && settings.costWeight > 0.5)
 				g += CostValue(predecessorNode, neighborNode);
 
 			if(restrictionType == RestrictionType.REFUEL)
@@ -33,7 +33,7 @@ public class CostUtils {
 				g += RestValue(predecessorNode, neighborNode, settings);
 		}
 
-		return (int) Math.round(g * 20);
+		return (int) Math.round(g * 379);
 	}
 
 	// --------------------------------------

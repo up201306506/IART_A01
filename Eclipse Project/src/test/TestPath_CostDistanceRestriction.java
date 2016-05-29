@@ -10,7 +10,7 @@ import logic.Node;
 import logic.NodeStop;
 import logic.AStar.RestrictionType;
 
-public class TestPath_CostRefuelRestriction {
+public class TestPath_CostDistanceRestriction {
 	
 	public static void main(String[] args) {
 		ArrayList<Node> nodeList = new ArrayList<>();
@@ -20,7 +20,7 @@ public class TestPath_CostRefuelRestriction {
 		nodeList.add(src);
 		
 		// path		
-		Node l = new Node("L", -0.5f, 3, false, false);
+		Node l = new Node("L", -0.9f, 3, true, false);
 		Node r = new Node("R", 0.5f, 3, true, false);
 		nodeList.add(l);
 		nodeList.add(r);
@@ -35,20 +35,21 @@ public class TestPath_CostRefuelRestriction {
 		Edge.associateNodes(r, dest, 1);
 		
 		ArrayList<RestrictionType> restrictionList = new ArrayList<>();
-		restrictionList.add(RestrictionType.REFUEL);
+		restrictionList.add(RestrictionType.DISTANCE);
 		restrictionList.add(RestrictionType.COST);
+		restrictionList.add(RestrictionType.REFUEL);
 		
 		// distance weight is max
 		//@param initialGasVale, initialTimeTravelValue, averageDurationByDistance, averageGasConsume,
 		// maxGasDeposit, maxTravelTime, distanceWeight, costWeight
-		AlgorithmSettings settings = new AlgorithmSettings(70, 70, 10, 10, 100, 100, 0, 1);
+		AlgorithmSettings settings = new AlgorithmSettings(99, 99, 10, 10, 100, 100, 0.4f, 0.6f);
 		
 		LinkedList<NodeStop> result = AStar.runAlgorithm(settings,
 				settings.nextGasValue, settings.nextTravelTime, src, dest, restrictionList);
 		for(NodeStop stop : result)
-			System.out.println("-> " + stop.getNode().getName() + "\t-- " + stop.stoppedToRefuel);
+			System.out.println("-> " + stop.getNode().getName());
 		
-		// with initialGasValue = 22, should print src - r - dest
-		// with initialGasValue = 70, should print src - l - dest
+		// more distance weight, should print src - r - dest
+		// more cost weight, should print src - l - dest
 	}
 }
