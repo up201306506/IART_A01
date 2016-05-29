@@ -40,7 +40,7 @@ public class GraphController extends Thread implements ViewerListener {
 		loop = false;
 	}
 
-	public void buttonPushed(String id) {
+	public void buttonPushed(String id) {		
 		Node n = (Node)graph.getNode(id).getAttribute("logic-node");
 		int state = graph.getNode(id).getAttribute("state");
 		switch (state) {
@@ -74,7 +74,7 @@ public class GraphController extends Thread implements ViewerListener {
 			int label = graph.getNode(id).getAttribute("ui.label");
 			if(label == numPath){
 				numPath--;
-				app.removeLast();
+				//app.removeLast();
 				String nodeLabel = "";
 				if(n.canRefuel){
 					nodeLabel += "(G)";
@@ -93,7 +93,7 @@ public class GraphController extends Thread implements ViewerListener {
 			if(destination){
 				source = false;
 				numPath++;
-				app.addPOI(n);
+				//app.addPOI(n);
 				graph.getNode(id).setAttribute("ui.label", numPath);
 				graph.getNode(id).setAttribute("ui.style", "fill-color: cyan,blue;");
 				graph.getNode(id).setAttribute("ui.style", "size: 30px;");
@@ -110,7 +110,7 @@ public class GraphController extends Thread implements ViewerListener {
 		//DESTINATION
 		case 3:
 			destination = false;
-			app.addPOI(n);
+			//app.addPOI(n);
 			numPath++;
 			graph.getNode(id).setAttribute("ui.label", numPath);
 			graph.getNode(id).setAttribute("ui.style", "fill-color: cyan,blue;");

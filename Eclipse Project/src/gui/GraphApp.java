@@ -102,6 +102,10 @@ public class GraphApp {
 		destinationNode = n;
 	}
 	
+	public void clearPOI(){
+		poi.clear();
+	}
+	
 	public boolean isValid(){
 		return clicks.isValid();
 	}

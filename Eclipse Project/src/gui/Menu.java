@@ -369,13 +369,17 @@ public class Menu extends JFrame {
 		if(restrictionList.size() == 0)
 			restrictionList.add(RestrictionType.NO_RESTRICTION);
 
+		gApp.addSourceAndDestination();
 		LinkedList<Node> poi = gApp.getPOI();
+		
 		for(int i = 0; i < (poi.size() - 1); i++){
 			LinkedList<NodeStop> result = AStar.runAlgorithm(settings, settings.nextGasValue, settings.nextTravelTime,
 					poi.get(i), poi.get(i + 1), restrictionList);
 
 			gApp.showPath(result);
 		}
+		
+		gApp.clearPOI();
 	}
 
 	private boolean slidersValid(){
