@@ -295,6 +295,7 @@ public class Menu extends JFrame {
 				speed = (double)speedSpinner.getValue();
 				consume = (double)consumeSpinner.getValue();
 				time = (int)timeSpinner.getValue();
+				gApp.clearPath();
 				showPath();
 			}
 		});
