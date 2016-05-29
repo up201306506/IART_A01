@@ -3,7 +3,6 @@ package gui;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.SingleGraph;
