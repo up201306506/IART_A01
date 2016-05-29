@@ -139,4 +139,13 @@ public class GraphApp {
 			}
 		}
 	}
+	
+	public void clearPath(){
+		for(org.graphstream.graph.Node n : graph) {
+			n.setAttribute("ui.style", "shadow-mode: none;");
+	   }
+		for(org.graphstream.graph.Edge e : graph.getEachEdge()) {
+			e.setAttribute("ui.style", "shadow-mode: none;");
+	   }
+	}
 }
