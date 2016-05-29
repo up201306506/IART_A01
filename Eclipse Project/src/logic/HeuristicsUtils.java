@@ -25,7 +25,7 @@ public class HeuristicsUtils {
 				else h += settings.varDistanceWeight * DistanceValue(currentN, targetN);
 
 			if (restrictionType == RestrictionType.COST)
-				if(settings.varCostWeight < 0.2 || settings.costWeight < 0.5) h += 0;
+				if(settings.varCostWeight < 0.5) h += 0;
 				else h += settings.varCostWeight * CostValue(currentN);
 
 			if(restrictionType == RestrictionType.REFUEL){
