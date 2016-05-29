@@ -39,7 +39,7 @@ import utils.FileManager;
 
 public class Menu extends JFrame {
 	private static final long serialVersionUID = 7883336728124920447L;
-	
+
 	private JPanel dummyPanel, formPanel, bottomPanel, filePanel, restrictionPanel, gasPanel, timePanel, speedPanel, consumePanel, maxGasPanel;
 	private JButton startButton,cancelButton,openFile;
 	private JLabel titleLabel,sourceLabel, destinationLabel, fileLabel, gasLabel, timeLabel, speedLabel, consumeLabel, maxGasLabel;
@@ -50,68 +50,70 @@ public class Menu extends JFrame {
 	private JLabel[] restrictionLabels;
 	private JSpinner gasSpinner, timeSpinner, speedSpinner, consumeSpinner, maxGasSpinner;
 	private final Color menuColor = new Color(58,134,207); 
-	
+
 	private int option, gas,time,maxGas;
 	private double speed, consume;
 	private File fileSelected;
-	
+
 	private GraphApp gApp;
-	
+
 	public Menu(){
 		//int initialGasVale, int initialTimeTravelValue,
 		// float averageSpeed, float averageGasConsume, int maxGasDeposit
 		super("Main Menu");
-		
+
+		gApp = null;
+
 		createButtons();
 		createLabels();
 		createRadioButtons();
 		createSpinners();
-		
+
 		formPanel = new JPanel();
 		formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
 		formPanel.setBackground(menuColor);
-		
+
 		fileChooser = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter(".txt", "txt");
 		fileChooser.setFileFilter(filter);
 		fileChooser.setAcceptAllFileFilterUsed(false);
-		
+
 		filePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		filePanel.add(openFile);
 		filePanel.add(fileLabel);
 		filePanel.setAlignmentX(LEFT_ALIGNMENT);
 		filePanel.setBackground(menuColor);
-		
+
 		gasPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		gasPanel.add(gasLabel);
 		gasPanel.add(gasSpinner);
 		gasPanel.setAlignmentX(LEFT_ALIGNMENT);
 		gasPanel.setBackground(menuColor);
-		
+
 		maxGasPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		maxGasPanel.add(maxGasLabel);
 		maxGasPanel.add(maxGasSpinner);
 		maxGasPanel.setAlignmentX(LEFT_ALIGNMENT);
 		maxGasPanel.setBackground(menuColor);
-		
+
 		speedPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		speedPanel.add(speedLabel);
 		speedPanel.add(speedSpinner);
 		speedPanel.setAlignmentX(LEFT_ALIGNMENT);
 		speedPanel.setBackground(menuColor);
-		
+
 		consumePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		consumePanel.add(consumeLabel);
 		consumePanel.add(consumeSpinner);
 		consumePanel.setAlignmentX(LEFT_ALIGNMENT);
 		consumePanel.setBackground(menuColor);
-		
+
 		timePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		timePanel.add(timeLabel);
 		timePanel.add(timeSpinner);
 		timePanel.setAlignmentX(LEFT_ALIGNMENT);
 		timePanel.setBackground(menuColor);
-		
+
 		restrictionPanel = new JPanel();
 		restrictionPanel.setAlignmentX(LEFT_ALIGNMENT);
 		restrictionPanel.setLayout(new BoxLayout(restrictionPanel, BoxLayout.Y_AXIS));
@@ -144,7 +146,7 @@ public class Menu extends JFrame {
 			}
 			restrictionPanel.add(restPanel);
 		}
-		
+
 		formPanel.add(titleLabel);
 		formPanel.add(filePanel);
 		formPanel.add(gasPanel);
@@ -156,11 +158,11 @@ public class Menu extends JFrame {
 		formPanel.add(new JLabel("                                                                                               "));
 		formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		formPanel.add(bottomPanel);
-		
+
 		dummyPanel = new JPanel();
 		dummyPanel.setPreferredSize(new Dimension(700,500));
 		dummyPanel.setBackground(Color.BLACK);
-		
+
 		setLayout(new GridBagLayout());
 		add(formPanel);
 		add(dummyPanel);
@@ -170,22 +172,23 @@ public class Menu extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setVisible(true);
-		
+
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run () {
-				if(gApp.isValid() && slidersValid()){
-					startButton.setEnabled(true);
-				}else{
+				if(gApp == null)
 					startButton.setEnabled(false);
-				}
+				else if(gApp.isValid() && slidersValid())
+					startButton.setEnabled(true);
+				else
+					startButton.setEnabled(false);
 			}
 		}, 0L,200L);
 	}
-	
+
 	private void createRadioButtons(){
-		
+
 		radioButtons = new JRadioButton[4];
 		radioButtons[0] = new JRadioButton();
 		radioButtons[0].setText("Distance");
@@ -206,7 +209,7 @@ public class Menu extends JFrame {
 				}
 			}
 		});
-		
+
 		radioButtons[1] = new JRadioButton();
 		radioButtons[1].setText("Cost");
 		radioButtons[1].setBackground(menuColor);
@@ -226,7 +229,7 @@ public class Menu extends JFrame {
 				}
 			}
 		});
-		
+
 		radioButtons[2] = new JRadioButton();
 		radioButtons[2].setText("Refuel");
 		radioButtons[2].setBackground(menuColor);
@@ -242,7 +245,7 @@ public class Menu extends JFrame {
 				}
 			}
 		});
-		
+
 		radioButtons[3] = new JRadioButton();
 		radioButtons[3].setText("Rest");
 		radioButtons[3].setBackground(menuColor);
@@ -259,7 +262,7 @@ public class Menu extends JFrame {
 			}
 		});
 	}
-	
+
 	private void createButtons(){
 		openFile = new JButton(new ImageIcon("graphics/openFile.gif"));
 		openFile.setText("Open a File...");
@@ -268,20 +271,20 @@ public class Menu extends JFrame {
 			public void actionPerformed (ActionEvent e) {
 				int n = fileChooser.showOpenDialog(Menu.this);
 				if (n == JFileChooser.APPROVE_OPTION) {
-	            fileSelected = fileChooser.getSelectedFile();
-	            fileLabel.setText(fileSelected.getName());
-	            fileLabel.setForeground(Color.GREEN);
-	            remove(dummyPanel);
-	            
-	            gApp = new GraphApp(FileManager.readDataSet(fileSelected));
-	    		gApp.createGraph();
-	            
-	            add(gApp.getView());
-	            pack();
+					fileSelected = fileChooser.getSelectedFile();
+					fileLabel.setText(fileSelected.getName());
+					fileLabel.setForeground(Color.GREEN);
+					remove(dummyPanel);
+
+					gApp = new GraphApp(FileManager.readDataSet(fileSelected));
+					gApp.createGraph();
+
+					add(gApp.getView());
+					pack();
 				}
 			}
 		});
-		
+
 		startButton = new JButton("Start");
 		startButton.setForeground(Color.GREEN);
 		startButton.setEnabled(false);
@@ -296,7 +299,7 @@ public class Menu extends JFrame {
 				showPath();
 			}
 		});
-		
+
 		cancelButton = new JButton("Cancel");
 		cancelButton.setForeground(Color.RED);
 		cancelButton.addActionListener(new ActionListener() {
@@ -305,69 +308,77 @@ public class Menu extends JFrame {
 				System.exit(0);
 			}
 		});
-		
+
 		bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		bottomPanel.setBackground(menuColor);
 		bottomPanel.add(startButton);
 		bottomPanel.add(cancelButton);
 		bottomPanel.setAlignmentX(LEFT_ALIGNMENT);
 	}
-	
+
 	private void createLabels(){
 		titleLabel = new JLabel("A* Algorithm - Path Finding");
 		titleLabel.setFont(new Font(titleLabel.getFont().getFontName(), titleLabel.getFont().getStyle(), 20));
 		titleLabel.setForeground(Color.WHITE);
-		
+
 		sourceLabel = new JLabel("Source identifier:");
-		
+
 		destinationLabel = new JLabel("Destination identifier:");
-		
+
 		fileLabel = new JLabel("No File Selected");
 		fileLabel.setForeground(Color.RED);
-		
+
 		gasLabel = new JLabel("Initial Gas Value:");
 		maxGasLabel = new JLabel("Maximum Gas Deposit:");
 		speedLabel = new JLabel("Average Speed:");
 		consumeLabel = new JLabel("Average Gas Consume:");
 		timeLabel = new JLabel("Maximum Travel Time:");
 	}
-	
+
 	private void createSpinners(){
 		gasSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 100000, 1));
 		gasSpinner.setPreferredSize(new Dimension(100,25));
-		
+
 		maxGasSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 100000, 1));
 		maxGasSpinner.setPreferredSize(new Dimension(100,25));
-		
+
 		speedSpinner = new JSpinner(new SpinnerNumberModel(0f, 0f, 100000.000f, 0.010f));
 		speedSpinner.setPreferredSize(new Dimension(100,25));
-		
+
 		consumeSpinner = new JSpinner(new SpinnerNumberModel(0f, 0f, 100000.000f, 0.010f));
 		consumeSpinner.setPreferredSize(new Dimension(100,25));
-		
+
 		timeSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 100000, 1));
 		timeSpinner.setPreferredSize(new Dimension(100,25));
 	}
-	
+
 	private void showPath(){
 		AlgorithmSettings settings = new AlgorithmSettings((int) gasSpinner.getValue(),
 				(int) timeSpinner.getValue(), (float) 1 / (float) speedSpinner.getValue(),
 				(float) consumeSpinner.getValue(), (int) maxGasSpinner.getValue(),
 				(int) timeSpinner.getValue(), (float) sliders[0].getValue(), (float) sliders[1].getValue());
-		
-		//TODO
+
 		ArrayList<RestrictionType> restrictionList = new ArrayList<>();
-		restrictionList.add(RestrictionType.NO_RESTRICTION);
-		
+		if(radioButtons[0].isSelected())
+			restrictionList.add(RestrictionType.DISTANCE);
+		if(radioButtons[1].isSelected())
+			restrictionList.add(RestrictionType.COST);
+		if(radioButtons[2].isSelected())
+			restrictionList.add(RestrictionType.REFUEL);
+		if(radioButtons[3].isSelected())
+			restrictionList.add(RestrictionType.REST);
+		if(restrictionList.size() == 0)
+			restrictionList.add(RestrictionType.NO_RESTRICTION);
+
 		LinkedList<Node> poi = gApp.getPOI();
 		for(int i = 0; i < (poi.size() - 1); i++){
 			LinkedList<NodeStop> result = AStar.runAlgorithm(settings, settings.nextGasValue, settings.nextTravelTime,
 					poi.get(i), poi.get(i + 1), restrictionList);
-			
+
 			gApp.showPath(result);
 		}
 	}
-	
+
 	private boolean slidersValid(){
 		if(radioButtons[0].isSelected() && radioButtons[1].isSelected()){
 			int sum = 0;
