@@ -1,7 +1,5 @@
 package gui;
 
-import java.util.LinkedList;
-
 import logic.Node;
 
 import org.graphstream.graph.Graph;
@@ -121,6 +119,5 @@ public class GraphController extends Thread implements ViewerListener {
 	
 	public boolean isValid(){
 		return source && destination;
-	}
-	
+	}	
 }

@@ -17,7 +17,6 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -32,16 +31,17 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import logic.AStar;
 import logic.AlgorithmSettings;
+import logic.Edge;
 import logic.Node;
 import logic.NodeStop;
 import logic.AStar.RestrictionType;
 
 public class Menu extends JFrame {
+	private static final long serialVersionUID = 7883336728124920447L;
 	
 	private JPanel dummyPanel, formPanel, bottomPanel, filePanel, restrictionPanel, gasPanel, timePanel, speedPanel, consumePanel, maxGasPanel;
 	private JButton startButton,cancelButton,openFile;
-	private JLabel titleLabel,sourceLabel,destinationLabel, fileLabel, errorLabel, gasLabel, timeLabel, speedLabel, consumeLabel, maxGasLabel;
-	private JComboBox<String> sourceComboBox, destinationComboBox;
+	private JLabel titleLabel,sourceLabel, destinationLabel, fileLabel, gasLabel, timeLabel, speedLabel, consumeLabel, maxGasLabel;
 	private JFileChooser fileChooser;
 	private JRadioButton noRestrictionButton;
 	private JRadioButton[] radioButtons;
@@ -50,28 +50,18 @@ public class Menu extends JFrame {
 	private JSpinner gasSpinner, timeSpinner, speedSpinner, consumeSpinner, maxGasSpinner;
 	private final Color menuColor = new Color(58,134,207); 
 	
-	private String source,destination;
 	private int option, gas,time,maxGas;
 	private double speed, consume;
 	private File fileSelected;
 	
 	private GraphApp gApp;
 	
-	public Menu(){
+	public Menu(ArrayList<Node> nodeList, ArrayList<Edge> edgeList){
 		//int initialGasVale, int initialTimeTravelValue,
 		// float averageSpeed, float averageGasConsume, int maxGasDeposit
 		super("Main Menu");
 		
-		ArrayList<Node> list = new ArrayList<Node>();
-		list.add(new Node("A", 1, 10, false, false));
-		list.add(new Node("B", 3, 2, false, false));
-		list.add(new Node("C", 4,-5, false, false));
-		list.add(new Node("D", -3,7, false, false));
-		list.add(new Node("E", -7,0, false, false));
-		list.add(new Node("F", 9,0, false, false));
-		list.add(new Node("G", -10,10, false, false));
-		list.add(new Node("H", -10,-10, false, false));
-		gApp = new GraphApp(list);
+		gApp = new GraphApp(nodeList);
 		gApp.createGraph();
 		
 		createButtons();
@@ -356,10 +346,10 @@ public class Menu extends JFrame {
 	}
 	
 	private void createSpinners(){
-		gasSpinner = new JSpinner();
+		gasSpinner = new JSpinner(new SpinnerNumberModel(0f, 0f, 100000.000f, 1f));
 		gasSpinner.setPreferredSize(new Dimension(100,25));
 		
-		maxGasSpinner = new JSpinner();
+		maxGasSpinner = new JSpinner(new SpinnerNumberModel(0f, 0f, 100000.000f, 1f));
 		maxGasSpinner.setPreferredSize(new Dimension(100,25));
 		
 		speedSpinner = new JSpinner(new SpinnerNumberModel(0f, 0f, 100000.000f, 0.010f));
@@ -368,15 +358,20 @@ public class Menu extends JFrame {
 		consumeSpinner = new JSpinner(new SpinnerNumberModel(0f, 0f, 100000.000f, 0.010f));
 		consumeSpinner.setPreferredSize(new Dimension(100,25));
 		
-		timeSpinner = new JSpinner();
+		timeSpinner = new JSpinner(new SpinnerNumberModel(0f, 0f, 100000.000f, 1f));
 		timeSpinner.setPreferredSize(new Dimension(100,25));
 	}
 	
 	private void showPath(){
+		AlgorithmSettings settings = new AlgorithmSettings((int) gasSpinner.getValue(),
+				(int) timeSpinner.getValue(), (float) 1 / (float) speedSpinner.getValue(),
+				(float) consumeSpinner.getValue(), (int) maxGasSpinner.getValue(),
+				(int) timeSpinner.getValue(), (float) sliders[0].getValue(), (float) sliders[1].getValue());
+		
 		//TODO
 		ArrayList<RestrictionType> restrictionList = new ArrayList<>();
 		restrictionList.add(RestrictionType.NO_RESTRICTION);
-		AlgorithmSettings settings = new AlgorithmSettings(0, 0, 2.4f, 7, 30, 15, 0, 0);
+		
 		LinkedList<Node> poi = gApp.getPOI();
 		for(int i = 0; i < (poi.size() - 1); i++){
 			LinkedList<NodeStop> result = AStar.runAlgorithm(settings, settings.nextGasValue, settings.nextTravelTime,
