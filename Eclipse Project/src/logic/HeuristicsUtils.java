@@ -21,11 +21,11 @@ public class HeuristicsUtils {
 				return 0;
 
 			if (restrictionType == RestrictionType.DISTANCE)
-				if(settings.varDistanceWeight <= 0) h += 0;
+				if(settings.varDistanceWeight < 0.5) h += 0;
 				else h += settings.varDistanceWeight * DistanceValue(currentN, targetN);
 
 			if (restrictionType == RestrictionType.COST)
-				if(settings.varCostWeight <= 0) h += 0;
+				if(settings.varCostWeight < 0.5) h += 0;
 				else h += settings.varCostWeight * CostValue(currentN);
 
 			if(restrictionType == RestrictionType.REFUEL){
@@ -51,7 +51,7 @@ public class HeuristicsUtils {
 				double distanceLeft = EuclideanDistance(currentN, targetN);
 				double distanceNeedToRest = travelTime / settings.averageDurationByDistance;
 				double distanceToRest = RestValue(currentN);
-				
+
 				double hRest;
 				if(currentN.equals(targetN)) hRest = 0;
 				else if(Node.restNodeList.contains(currentN)) hRest = 0;
@@ -63,7 +63,7 @@ public class HeuristicsUtils {
 			}
 		}
 
-		return (int) Math.round(h * 20);
+		return (int) Math.round(h * 379);
 	}
 
 	// --------------------------------------

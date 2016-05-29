@@ -3,6 +3,7 @@ package gui;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.SingleGraph;
@@ -10,6 +11,7 @@ import org.graphstream.ui.swingViewer.ViewPanel;
 import org.graphstream.ui.view.Viewer;
 
 import logic.Node;
+import logic.NodeStop;
 
 public class GraphApp {
 	
@@ -53,6 +55,10 @@ public class GraphApp {
 		}
 		
 		// add edges
+		graph.addEdge("AB", "A", "B");
+		graph.addEdge("BC", "B", "C");
+		graph.addEdge("CD", "C", "D");
+		graph.addEdge("DE", "D", "E");
 		// TODO
 	}
 	
@@ -99,5 +105,22 @@ public class GraphApp {
 	public void addSourceAndDestination(){
 		poi.addFirst(sourceNode);
 		poi.addLast(destinationNode);
+	}
+	
+	public void showPath(LinkedList<NodeStop> path){
+		for (int i = 0; i < path.size(); i++) {
+			String nodeName = path.get(i).getNode().getName();
+			graph.getNode(nodeName).setAttribute("ui.style", "shadow-mode: gradient-radial;");
+			graph.getNode(nodeName).setAttribute("ui.style", "shadow-color: purple;");
+			graph.getNode(nodeName).setAttribute("ui.style", "shadow-width: 3;");
+			graph.getNode(nodeName).setAttribute("ui.style", "shadow-offset: 0;");
+			if(i+1 < path.size()){
+				String nextNode = path.get(i+1).getNode().getName();
+				graph.getNode(nodeName).getEdgeFrom(nextNode).setAttribute("ui.style", "shadow-mode: gradient-radial;");
+				graph.getNode(nodeName).getEdgeFrom(nextNode).setAttribute("ui.style", "shadow-color: purple;");
+				graph.getNode(nodeName).getEdgeFrom(nextNode).setAttribute("ui.style", "shadow-width: 3;");
+				graph.getNode(nodeName).getEdgeFrom(nextNode).setAttribute("ui.style", "shadow-offset: 0;");
+			}
+		}
 	}
 }

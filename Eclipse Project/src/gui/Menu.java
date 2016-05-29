@@ -67,7 +67,7 @@ public class Menu extends JFrame {
 		list.add(new Node("B", 3, 2, false, false));
 		list.add(new Node("C", 4,-5, false, false));
 		list.add(new Node("D", -3,7, false, false));
-		list.add(new Node("E", 1,0, false, false));
+		list.add(new Node("E", -7,0, false, false));
 		list.add(new Node("F", 9,0, false, false));
 		list.add(new Node("G", -10,10, false, false));
 		list.add(new Node("H", -10,-10, false, false));
@@ -358,8 +358,7 @@ public class Menu extends JFrame {
 			LinkedList<NodeStop> result = AStar.runAlgorithm(settings, settings.nextGasValue, settings.nextTravelTime,
 					poi.get(i), poi.get(i + 1), restrictionList);
 			
-			for(NodeStop stop : result)
-				System.out.println("-> " + stop.getNode().getName());
+			gApp.showPath(result);
 		}
 	}
 	
