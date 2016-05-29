@@ -124,7 +124,7 @@ public class Menu extends JFrame {
 			JPanel restPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			restPanel.setBackground(menuColor);
 			sliders[i] = new JSlider(0,100);
-			sliders[i].setEnabled(false);
+			sliders[i].setForeground(menuColor);
 			sliders[i].addChangeListener(new ChangeListener() {
 				@Override
 				public void stateChanged (ChangeEvent e) {
@@ -136,11 +136,14 @@ public class Menu extends JFrame {
 				}
 			});
 			restrictionLabels[i] = new JLabel(sliders[i].getValue()+"%");
-			restrictionLabels[i].setEnabled(false);
 			restrictionLabels[i].setSize(new Dimension(10,10));
 			restPanel.add(radioButtons[i]);
-			restPanel.add(sliders[i]);
-			restPanel.add(restrictionLabels[i]);
+			sliders[i].setVisible(false);
+			restrictionLabels[i].setVisible(false);
+			if(i < 2){
+				restPanel.add(sliders[i]);
+				restPanel.add(restrictionLabels[i]);
+			}
 			restrictionPanel.add(restPanel);
 		}
 		
@@ -151,7 +154,6 @@ public class Menu extends JFrame {
 		formPanel.add(speedPanel);
 		formPanel.add(consumePanel);
 		formPanel.add(timePanel);
-		formPanel.add(noRestrictionButton);
 		formPanel.add(restrictionPanel);
 		formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		formPanel.add(bottomPanel);
@@ -184,33 +186,10 @@ public class Menu extends JFrame {
 	}
 	
 	private void createRadioButtons(){
-		noRestrictionButton = new JRadioButton();
-		noRestrictionButton.setText("No restrictions                                                    ");
-		noRestrictionButton.setBackground(menuColor);
-		noRestrictionButton.setSelected(true);
-		noRestrictionButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed (ActionEvent e) {
-				for (int i = 0; i < radioButtons.length; i++) {
-					if(noRestrictionButton.isSelected()){
-						radioButtons[i].setEnabled(false);
-						sliders[i].setEnabled(false);
-						restrictionLabels[i].setEnabled(false);
-					}else{
-						radioButtons[i].setEnabled(true);
-						if(radioButtons[i].isSelected()){
-							sliders[i].setEnabled(true);
-							restrictionLabels[i].setEnabled(true);
-						}
-					}
-				}
-			}
-		});
 		
 		radioButtons = new JRadioButton[4];
 		radioButtons[0] = new JRadioButton();
 		radioButtons[0].setText("Distance");
-		radioButtons[0].setEnabled(false);
 		radioButtons[0].setBackground(menuColor);
 		radioButtons[0].addActionListener(new ActionListener() {
 			@Override
@@ -227,7 +206,6 @@ public class Menu extends JFrame {
 		
 		radioButtons[1] = new JRadioButton();
 		radioButtons[1].setText("Cost");
-		radioButtons[1].setEnabled(false);
 		radioButtons[1].setBackground(menuColor);
 		radioButtons[1].addActionListener(new ActionListener() {
 			@Override
@@ -244,7 +222,6 @@ public class Menu extends JFrame {
 		
 		radioButtons[2] = new JRadioButton();
 		radioButtons[2].setText("Refuel");
-		radioButtons[2].setEnabled(false);
 		radioButtons[2].setBackground(menuColor);
 		radioButtons[2].addActionListener(new ActionListener() {
 			@Override
@@ -261,7 +238,6 @@ public class Menu extends JFrame {
 		
 		radioButtons[3] = new JRadioButton();
 		radioButtons[3].setText("Rest");
-		radioButtons[3].setEnabled(false);
 		radioButtons[3].setBackground(menuColor);
 		radioButtons[3].addActionListener(new ActionListener() {
 			@Override
@@ -346,10 +322,10 @@ public class Menu extends JFrame {
 	}
 	
 	private void createSpinners(){
-		gasSpinner = new JSpinner(new SpinnerNumberModel(0f, 0f, 100000.000f, 1f));
+		gasSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 100000, 1));
 		gasSpinner.setPreferredSize(new Dimension(100,25));
 		
-		maxGasSpinner = new JSpinner(new SpinnerNumberModel(0f, 0f, 100000.000f, 1f));
+		maxGasSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 100000, 1));
 		maxGasSpinner.setPreferredSize(new Dimension(100,25));
 		
 		speedSpinner = new JSpinner(new SpinnerNumberModel(0f, 0f, 100000.000f, 0.010f));
@@ -358,7 +334,7 @@ public class Menu extends JFrame {
 		consumeSpinner = new JSpinner(new SpinnerNumberModel(0f, 0f, 100000.000f, 0.010f));
 		consumeSpinner.setPreferredSize(new Dimension(100,25));
 		
-		timeSpinner = new JSpinner(new SpinnerNumberModel(0f, 0f, 100000.000f, 1f));
+		timeSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 100000, 1));
 		timeSpinner.setPreferredSize(new Dimension(100,25));
 	}
 	
@@ -382,16 +358,16 @@ public class Menu extends JFrame {
 	}
 	
 	private boolean slidersValid(){
-		if(noRestrictionButton.isSelected()){
-			return true;
-		}else{
+		if(radioButtons[0].isSelected() && radioButtons[1].isSelected()){
 			int sum = 0;
-			for (int i = 0; i < radioButtons.length; i++) {
+			for (int i = 0; i < 2; i++) {
 				if(radioButtons[i].isSelected()){
 					sum += sliders[i].getValue();
 				}
 			}
 			return sum == 100;
+		}else{
+			return true;
 		}
 	}
 }
