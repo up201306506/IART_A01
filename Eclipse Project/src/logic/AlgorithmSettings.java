@@ -75,10 +75,10 @@ public class AlgorithmSettings {
 			float timePercentage = travelTimeValue / maxTravelTime;
 			float newRestWeight = (float) getRestWeightDiff(timePercentage);
 
-			float restPercentage = 1 - Math.max(newRefuelWeight, newRestWeight);
+			//float restPercentage = 1 - Math.max(newRefuelWeight, newRestWeight);
 
-			varDistanceWeight = distanceWeight * restPercentage;
-			varCostWeight = costWeight * restPercentage;
+			varDistanceWeight = distanceWeight;
+			varCostWeight = costWeight;
 
 			varRefuelWeight = newRefuelWeight;
 			varRestWeight = newRestWeight;

@@ -41,7 +41,7 @@ public class TestPath_CostRefuelRestriction {
 		// distance weight is max
 		//@param initialGasVale, initialTimeTravelValue, averageDurationByDistance, averageGasConsume,
 		// maxGasDeposit, maxTravelTime, distanceWeight, costWeight
-		AlgorithmSettings settings = new AlgorithmSettings(22, 70, 10, 10, 100, 100, 0, 1);
+		AlgorithmSettings settings = new AlgorithmSettings(70, 70, 10, 10, 100, 100, 0, 1);
 		
 		LinkedList<NodeStop> result = AStar.runAlgorithm(settings,
 				settings.nextGasValue, settings.nextTravelTime, src, dest, restrictionList);
