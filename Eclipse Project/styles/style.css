@@ -1,5 +1,5 @@
 graph { 
-	fill-color: rgb(85,185,94);
+	fill-color: white;
 }
 
 node {
@@ -12,9 +12,6 @@ node {
 }
 
 edge {
-	fill-color: red;
+	fill-color: black;
+	size: 2px;
 }
-
-edge.tollway { size: 2px; stroke-color: red; stroke-width: 1px; stroke-mode: plain; }
-edge.tunnel { stroke-color: blue; stroke-width: 1px; stroke-mode: plain; }
-edge.bridge { stroke-color: yellow; stroke-width: 1px; stroke-mode: plain; }
