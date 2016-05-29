@@ -35,6 +35,7 @@ import logic.Edge;
 import logic.Node;
 import logic.NodeStop;
 import logic.AStar.RestrictionType;
+import utils.FileManager;
 
 public class Menu extends JFrame {
 	private static final long serialVersionUID = 7883336728124920447L;
@@ -56,13 +57,10 @@ public class Menu extends JFrame {
 	
 	private GraphApp gApp;
 	
-	public Menu(ArrayList<Node> nodeList, ArrayList<Edge> edgeList){
+	public Menu(){
 		//int initialGasVale, int initialTimeTravelValue,
 		// float averageSpeed, float averageGasConsume, int maxGasDeposit
 		super("Main Menu");
-		
-		gApp = new GraphApp(nodeList);
-		gApp.createGraph();
 		
 		createButtons();
 		createLabels();
@@ -265,6 +263,10 @@ public class Menu extends JFrame {
 	            fileLabel.setText(fileSelected.getName());
 	            fileLabel.setForeground(Color.GREEN);
 	            remove(dummyPanel);
+	            
+	            gApp = new GraphApp(FileManager.readDataSet(fileSelected));
+	    		gApp.createGraph();
+	            
 	            add(gApp.getView());
 	            pack();
 				}
