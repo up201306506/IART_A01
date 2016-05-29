@@ -48,7 +48,14 @@ public class GraphApp {
 	public void createGraph(){
 		// add nodes
 		for(Node node : nodeList){
-			graph.addNode(node.getName()).addAttribute("ui.label", node.getName());
+			String nodeLabel = "";
+			if(node.canRefuel){
+				nodeLabel += "(G)";
+			}
+			if(node.canRest){
+				nodeLabel += "(H)";
+			}
+			graph.addNode(node.getName()).addAttribute("ui.label", nodeLabel + node.getName());
 			graph.getNode(node.getName()).addAttribute("logic-node", node);
 			graph.getNode(node.getName()).setAttribute("state", 0);
 			graph.getNode(node.getName()).addAttribute("layout.frozen");
