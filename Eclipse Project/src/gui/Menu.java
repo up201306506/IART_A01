@@ -353,8 +353,8 @@ public class Menu extends JFrame {
 
 	private void showPath(){
 		AlgorithmSettings settings = new AlgorithmSettings((int) gasSpinner.getValue(),
-				(int) timeSpinner.getValue(), (float) 1 / (float) speedSpinner.getValue(),
-				(float) consumeSpinner.getValue(), (int) maxGasSpinner.getValue(),
+				(int) timeSpinner.getValue(), (float) (1f / (double) speedSpinner.getValue()),
+				Float.parseFloat(""+consumeSpinner.getValue()), (int) maxGasSpinner.getValue(),
 				(int) timeSpinner.getValue(), (float) sliders[0].getValue(), (float) sliders[1].getValue());
 
 		ArrayList<RestrictionType> restrictionList = new ArrayList<>();
