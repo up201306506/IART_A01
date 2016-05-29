@@ -148,8 +148,8 @@ public class Menu extends JFrame {
 			restrictionLabels[i] = new JLabel(sliders[i].getValue()+"%");
 			restrictionLabels[i].setSize(new Dimension(10,10));
 			restPanel.add(radioButtons[i]);
-			sliders[i].setVisible(false);
-			restrictionLabels[i].setVisible(false);
+			sliders[i].setEnabled(false);
+			restrictionLabels[i].setEnabled(false);
 			if(i < 2){
 				restPanel.add(sliders[i]);
 				restPanel.add(restrictionLabels[i]);
@@ -165,6 +165,7 @@ public class Menu extends JFrame {
 		formPanel.add(consumePanel);
 		formPanel.add(timePanel);
 		formPanel.add(restrictionPanel);
+		formPanel.add(new JLabel("                                                                                               "));
 		formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		formPanel.add(bottomPanel);
 		
@@ -204,12 +205,16 @@ public class Menu extends JFrame {
 		radioButtons[0].addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed (ActionEvent e) {
-				if(radioButtons[0].isSelected()){
+				if(radioButtons[0].isSelected() && radioButtons[1].isSelected()){
 					sliders[0].setEnabled(true);
 					restrictionLabels[0].setEnabled(true);
+					sliders[1].setEnabled(true);
+					restrictionLabels[1].setEnabled(true);
 				}else{
 					sliders[0].setEnabled(false);
 					restrictionLabels[0].setEnabled(false);
+					sliders[1].setEnabled(false);
+					restrictionLabels[1].setEnabled(false);
 				}
 			}
 		});
@@ -220,10 +225,14 @@ public class Menu extends JFrame {
 		radioButtons[1].addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed (ActionEvent e) {
-				if(radioButtons[1].isSelected()){
+				if(radioButtons[0].isSelected() && radioButtons[1].isSelected()){
+					sliders[0].setEnabled(true);
+					restrictionLabels[0].setEnabled(true);
 					sliders[1].setEnabled(true);
 					restrictionLabels[1].setEnabled(true);
 				}else{
+					sliders[0].setEnabled(false);
+					restrictionLabels[0].setEnabled(false);
 					sliders[1].setEnabled(false);
 					restrictionLabels[1].setEnabled(false);
 				}
