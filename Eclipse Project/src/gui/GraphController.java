@@ -75,7 +75,14 @@ public class GraphController extends Thread implements ViewerListener {
 			if(label == numPath){
 				numPath--;
 				app.removeLast();
-				graph.getNode(id).setAttribute("ui.label",n.getName());
+				String nodeLabel = "";
+				if(n.canRefuel){
+					nodeLabel += "(G)";
+				}
+				if(n.canRest){
+					nodeLabel += "(H)";
+				}
+				graph.getNode(id).setAttribute("ui.label",nodeLabel + id);
 				graph.getNode(id).setAttribute("ui.style", "fill-color: yellow,orange;");
 				graph.getNode(id).setAttribute("ui.style", "size: 20px;");
 				graph.getNode(id).setAttribute("state",0);
